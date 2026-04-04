@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import {Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { VortexDemo } from "@/components/ui/Vvortex";
+
 
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
@@ -32,7 +32,6 @@ export default function RootLayout({
     
     {/* Background */}
     <div className="absolute inset-0 overflow-hidden">
-      <VortexDemo />
     </div>
 
     {/* Foreground content */}
