@@ -54,6 +54,7 @@ export default function DashboardClient({ user, groups }: DashboardProps) {
       const data = await res.json();
       setJoinLink(data.joinLink);
       setNotification("Group created successfully 🎉");
+      setTimeout(() => setNotification(""), 4000);
     } catch {
       setNotification("Failed to create group");
       setTimeout(() => setNotification(""), 3000);
@@ -92,110 +93,215 @@ export default function DashboardClient({ user, groups }: DashboardProps) {
     }
   };
 
+  const handleSignOut = () => {
+    window.location.href = "/api/auth/signout";
+  };
+
   if (!user) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-black">
-        <p className="text-zinc-400">Loading user...</p>
+      <div className="min-h-screen flex items-center justify-center bg-[#0a0a0f]">
+        <div className="flex items-center gap-3">
+          <div className="w-5 h-5 rounded-full border-2 border-emerald-500 border-t-transparent animate-spin" />
+          <p className="text-zinc-400">Loading your dashboard...</p>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-black via-zinc-950 to-zinc-900 text-white px-4 py-10">
-      <div className="max-w-3xl mx-auto space-y-6">
+    <div className="min-h-screen bg-[#0a0a0f] text-white overflow-hidden">
+      {/* Background effects */}
+      <div className="fixed inset-0 bg-grid opacity-30 pointer-events-none" />
+      <div className="fixed top-[-300px] right-[-200px] w-[500px] h-[500px] rounded-full bg-emerald-500/8 blur-[140px] pointer-events-none" />
+      <div className="fixed bottom-[-200px] left-[-200px] w-[500px] h-[500px] rounded-full bg-violet-500/8 blur-[140px] pointer-events-none" />
 
-        {/* Notification */}
+      <div className="relative z-10 max-w-4xl mx-auto px-6 py-8 space-y-8">
+        {/* Notification Toast */}
         {notification && (
-          <div className="bg-green-600/90 backdrop-blur px-5 py-3 rounded-xl shadow-lg animate-in fade-in">
+          <div className="fixed top-6 right-6 z-50 px-5 py-3 rounded-xl bg-emerald-600/90 backdrop-blur-md shadow-2xl shadow-emerald-500/20 text-sm font-medium animate-in fade-in slide-in-from-top-2 duration-300">
             {notification}
           </div>
         )}
 
+        {/* Navbar */}
+        <div className="flex items-center justify-between pb-2">
+          <div className="flex items-center gap-3">
+            <div className="w-9 h-9 rounded-xl gradient-emerald flex items-center justify-center font-bold text-lg text-white">
+              S
+            </div>
+            <span className="text-xl font-bold tracking-tight">
+              Split<span className="text-emerald-400">Ease</span>
+            </span>
+          </div>
+          <button
+            onClick={handleSignOut}
+            className="px-4 py-2 rounded-xl text-sm text-zinc-400 hover:text-white border border-zinc-800 hover:border-zinc-600 transition-all"
+          >
+            Sign Out
+          </button>
+        </div>
+
         {/* Welcome Card */}
-        <Card className="bg-zinc-900/60 border-zinc-800 backdrop-blur-xl rounded-2xl">
-          <CardHeader>
-            <CardTitle className="text-2xl font-semibold">
-              Welcome, {user.name ?? "User"} 👋
-            </CardTitle>
-            <p className="text-sm text-zinc-400">{user.email}</p>
-          </CardHeader>
-        </Card>
+        <div className="glass-card rounded-2xl p-8 glow-emerald">
+          <div className="flex items-center gap-5">
+            <div className="w-16 h-16 rounded-2xl gradient-emerald flex items-center justify-center text-3xl font-bold text-white shrink-0">
+              {user.name?.charAt(0)?.toUpperCase() || "U"}
+            </div>
+            <div>
+              <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">
+                Welcome back, {user.name ?? "User"} 👋
+              </h1>
+              <p className="text-zinc-400 text-sm mt-1">{user.email}</p>
+            </div>
+          </div>
+        </div>
 
-        {/* Groups */}
-        <Card className="bg-zinc-900/60 border-zinc-800 backdrop-blur-xl rounded-2xl">
-          <CardHeader>
-            <CardTitle>Your Groups</CardTitle>
-          </CardHeader>
+        {/* Stats Row */}
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+          <div className="glass-card rounded-2xl p-5 text-center">
+            <div className="text-3xl font-bold text-gradient-emerald">{groups.length}</div>
+            <div className="text-xs text-zinc-500 mt-1">Active Groups</div>
+          </div>
+          <div className="glass-card rounded-2xl p-5 text-center">
+            <div className="text-3xl font-bold text-gradient-violet">∞</div>
+            <div className="text-xs text-zinc-500 mt-1">Unlimited Splits</div>
+          </div>
+          <div className="hidden sm:block glass-card rounded-2xl p-5 text-center">
+            <div className="text-3xl font-bold text-emerald-400">₹</div>
+            <div className="text-xs text-zinc-500 mt-1">Currency</div>
+          </div>
+        </div>
 
-          <CardContent className="space-y-3">
-            {groups.length === 0 && (
-              <p className="text-sm text-zinc-400">
-                You are not part of any groups yet.
-              </p>
-            )}
-
-            {groups.map((group) => (
-              <div
-                key={group._id}
-                onClick={() => router.push(`/group/${group._id}`)}
-                className="p-4 rounded-xl bg-zinc-800/50 hover:bg-zinc-800 transition cursor-pointer border border-transparent hover:border-zinc-700"
-              >
-                {group.name}
-              </div>
-            ))}
-          </CardContent>
-        </Card>
-
-        {/* Actions */}
+        {/* Action Buttons */}
         <div className="grid grid-cols-2 gap-4">
-          <Button
-            className="rounded-xl bg-white text-black hover:bg-zinc-200 font-medium"
-            onClick={() => setCreateOpen(true)}
+          <button
+            onClick={() => {
+              setCreateOpen(true);
+              setGroupName("");
+              setJoinLink("");
+            }}
+            className="glass-card rounded-2xl p-6 text-center group hover:border-emerald-500/30 transition-all duration-300 cursor-pointer"
           >
-            Create Group
-          </Button>
+            <div className="w-12 h-12 mx-auto rounded-2xl gradient-emerald flex items-center justify-center text-xl mb-3 group-hover:scale-110 transition-transform">
+              ＋
+            </div>
+            <div className="font-bold text-lg">Create Group</div>
+            <p className="text-xs text-zinc-500 mt-1">Start a new expense group</p>
+          </button>
 
-          <Button
-            variant="outline"
-            className="rounded-xl border-zinc-700 hover:bg-zinc-800"
-            onClick={() => setJoinOpen(true)}
+          <button
+            onClick={() => {
+              setJoinOpen(true);
+              setToken("");
+            }}
+            className="glass-card rounded-2xl p-6 text-center group hover:border-violet-500/30 transition-all duration-300 cursor-pointer"
           >
-            Join Group
-          </Button>
+            <div className="w-12 h-12 mx-auto rounded-2xl gradient-violet flex items-center justify-center text-xl mb-3 group-hover:scale-110 transition-transform">
+              🔗
+            </div>
+            <div className="font-bold text-lg">Join Group</div>
+            <p className="text-xs text-zinc-500 mt-1">Enter an invite token</p>
+          </button>
+        </div>
+
+        {/* Groups List */}
+        <div className="space-y-4">
+          <h2 className="text-xl font-bold tracking-tight flex items-center gap-2">
+            <span className="w-1 h-6 rounded-full bg-emerald-500" />
+            Your Groups
+          </h2>
+
+          {groups.length === 0 ? (
+            <div className="glass-card rounded-2xl p-12 text-center">
+              <div className="text-5xl mb-4">🎯</div>
+              <h3 className="text-lg font-semibold mb-2">No groups yet</h3>
+              <p className="text-zinc-400 text-sm max-w-sm mx-auto">
+                Create your first group or join one using an invite token to get started.
+              </p>
+            </div>
+          ) : (
+            <div className="grid gap-3">
+              {groups.map((group, index) => (
+                <div
+                  key={group._id}
+                  onClick={() => router.push(`/group/${group._id}`)}
+                  className="glass-card rounded-2xl p-5 flex items-center gap-4 cursor-pointer hover:border-emerald-500/20 transition-all duration-300 group"
+                >
+                  <div
+                    className={`w-12 h-12 rounded-xl flex items-center justify-center text-lg font-bold text-white shrink-0 ${index % 2 === 0 ? "gradient-emerald" : "gradient-violet"
+                      }`}
+                  >
+                    {group.name.charAt(0).toUpperCase()}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="font-semibold text-lg truncate group-hover:text-emerald-400 transition-colors">
+                      {group.name}
+                    </div>
+                    <p className="text-xs text-zinc-500">Tap to view details</p>
+                  </div>
+                  <svg
+                    className="w-5 h-5 text-zinc-600 group-hover:text-emerald-400 transition-colors shrink-0"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </div>
 
       {/* CREATE DIALOG */}
       <Dialog open={createOpen} onOpenChange={setCreateOpen}>
-        <DialogContent className="bg-zinc-900 border-zinc-800 rounded-2xl">
+        <DialogContent className="bg-[#12121a] border-zinc-800/50 rounded-2xl shadow-2xl">
           <DialogHeader>
-            <DialogTitle>Create New Group</DialogTitle>
+            <DialogTitle className="text-xl font-bold flex items-center gap-2">
+              <span className="w-8 h-8 rounded-lg gradient-emerald flex items-center justify-center text-sm">＋</span>
+              Create New Group
+            </DialogTitle>
           </DialogHeader>
 
-          <div className="space-y-4">
+          <div className="space-y-4 mt-2">
             <Input
-              className="bg-zinc-800 border-zinc-700"
-              placeholder="Enter group name"
+              className="bg-[#1e1e2e] border-zinc-800 rounded-xl h-12 focus:border-emerald-500/50 focus:ring-emerald-500/20"
+              placeholder="e.g. Goa Trip, Apartment Bills"
               value={groupName}
               onChange={(e) => setGroupName(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && confirmGroupCreation()}
             />
 
-            <Button className="w-full rounded-xl" onClick={confirmGroupCreation}>
-              {loading ? "Creating..." : "Create Group"}
+            <Button
+              className="w-full rounded-xl h-12 gradient-emerald hover:opacity-90 font-semibold text-white border-0"
+              onClick={confirmGroupCreation}
+              disabled={loading || !groupName.trim()}
+            >
+              {loading ? (
+                <span className="flex items-center gap-2">
+                  <span className="w-4 h-4 rounded-full border-2 border-white border-t-transparent animate-spin" />
+                  Creating...
+                </span>
+              ) : (
+                "Create Group"
+              )}
             </Button>
 
             {joinLink && (
-              <>
+              <div className="space-y-3 pt-2">
                 <p className="text-sm text-zinc-400">Share this invite link:</p>
-
-                <div className="p-3 bg-zinc-800 rounded-lg text-sm break-all">
+                <div className="p-3 bg-[#1e1e2e] rounded-xl text-sm break-all text-emerald-400 border border-emerald-500/20">
                   {joinLink}
                 </div>
-
-                <Button variant="secondary" className="w-full" onClick={copyLink}>
-                  Copy Invite Link
+                <Button
+                  variant="secondary"
+                  className="w-full rounded-xl bg-[#1e1e2e] hover:bg-zinc-800 border border-zinc-800"
+                  onClick={copyLink}
+                >
+                  📋 Copy Invite Link
                 </Button>
-              </>
+              </div>
             )}
           </div>
         </DialogContent>
@@ -203,20 +309,35 @@ export default function DashboardClient({ user, groups }: DashboardProps) {
 
       {/* JOIN DIALOG */}
       <Dialog open={joinOpen} onOpenChange={setJoinOpen}>
-        <DialogContent className="bg-zinc-900 border-zinc-800 rounded-2xl">
+        <DialogContent className="bg-[#12121a] border-zinc-800/50 rounded-2xl shadow-2xl">
           <DialogHeader>
-            <DialogTitle>Join Group</DialogTitle>
+            <DialogTitle className="text-xl font-bold flex items-center gap-2">
+              <span className="w-8 h-8 rounded-lg gradient-violet flex items-center justify-center text-sm">🔗</span>
+              Join a Group
+            </DialogTitle>
           </DialogHeader>
 
-          <div className="flex gap-2">
+          <div className="space-y-4 mt-2">
             <Input
-              className="bg-zinc-800 border-zinc-700"
-              placeholder="Enter group token"
+              className="bg-[#1e1e2e] border-zinc-800 rounded-xl h-12 focus:border-violet-500/50 focus:ring-violet-500/20"
+              placeholder="Paste the invite token here"
               value={token}
               onChange={(e) => setToken(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && joinGroup()}
             />
-            <Button onClick={joinGroup}>
-              {loading ? "Joining..." : "Join"}
+            <Button
+              className="w-full rounded-xl h-12 gradient-violet hover:opacity-90 font-semibold text-white border-0"
+              onClick={joinGroup}
+              disabled={loading || !token.trim()}
+            >
+              {loading ? (
+                <span className="flex items-center gap-2">
+                  <span className="w-4 h-4 rounded-full border-2 border-white border-t-transparent animate-spin" />
+                  Joining...
+                </span>
+              ) : (
+                "Join Group"
+              )}
             </Button>
           </div>
         </DialogContent>

@@ -5,7 +5,18 @@ import GroupMember from "@/models/GroupMember";
 import User from "@/models/User";
 import { connectToDatabase } from "@/lib/db";
 import { auth } from "@/auth";
+import { headers } from "next/headers";
 
+/**
+ * POST /api/groups
+ *
+ * Creates a new group and adds the creator as an admin member.
+ *
+ * [CHANGES MADE]:
+ * 1. Return the full absolute join URL (with origin) instead of a relative
+ *    path, so the link works correctly when copied and shared externally.
+ * 2. Added comments documenting the transaction logic.
+ */
 export async function POST(request: Request) {
   const session = await auth();
   if (!session?.user?.email) {
@@ -24,6 +35,8 @@ export async function POST(request: Request) {
     return new Response("User not found", { status: 404 });
   }
 
+  // Use a MongoDB session/transaction to ensure both the group and the
+  // admin membership are created atomically — if one fails, both roll back.
   const dbSession = await mongoose.startSession();
   dbSession.startTransaction();
 
@@ -55,10 +68,16 @@ export async function POST(request: Request) {
     await dbSession.commitTransaction();
     dbSession.endSession();
 
+    // [CHANGED] Build the full absolute URL so it works when shared externally
+    const headersList = await headers();
+    const host = headersList.get("host") || "localhost:3000";
+    const protocol = headersList.get("x-forwarded-proto") || "http";
+    const origin = `${protocol}://${host}`;
+
     return Response.json(
       {
         groupId: group._id.toString(),
-        joinLink: `/join/${token}`,
+        joinLink: `${origin}/join/${token}`,
       },
       { status: 201 }
     );
