@@ -14,7 +14,7 @@ const geistSans = Geist_Mono({
 });
 
 export const viewport: Viewport = {
-  themeColor: "#0a0a0f",
+  themeColor: "#09090b",
   width: "device-width",
   initialScale: 1,
   maximumScale: 5,

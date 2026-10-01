@@ -42,64 +42,64 @@
   --radius-4xl: calc(var(--radius) + 16px);
 }
 
-/* ─── Premium Obsidian & Zinc Monochrome Dark Theme ─── */
+/* ─── Premium Smoked Obsidian & Metallic Titanium Theme ─── */
 :root {
   --radius: 0.75rem;
   --background: #09090b;
-  --foreground: #fafafa;
-  --card: #121215;
-  --card-foreground: #fafafa;
-  --popover: #121215;
-  --popover-foreground: #fafafa;
+  --foreground: #f8fafc;
+  --card: #111114;
+  --card-foreground: #f8fafc;
+  --popover: #111114;
+  --popover-foreground: #f8fafc;
   --primary: #ffffff;
   --primary-foreground: #09090b;
-  --secondary: #1f1f23;
-  --secondary-foreground: #fafafa;
+  --secondary: #1e1e24;
+  --secondary-foreground: #f8fafc;
   --muted: #18181b;
-  --muted-foreground: #a1a1aa;
+  --muted-foreground: #94a3b8;
   --accent: #27272a;
-  --accent-foreground: #fafafa;
+  --accent-foreground: #f8fafc;
   --destructive: #f43f5e;
-  --border: rgba(255, 255, 255, 0.08);
-  --input: rgba(255, 255, 255, 0.1);
-  --ring: #e4e4e7;
+  --border: rgba(255, 255, 255, 0.09);
+  --input: rgba(255, 255, 255, 0.12);
+  --ring: #cbd5e1;
   --sidebar: #0e0e11;
-  --sidebar-foreground: #fafafa;
+  --sidebar-foreground: #f8fafc;
   --sidebar-primary: #ffffff;
   --sidebar-primary-foreground: #09090b;
   --sidebar-accent: #18181b;
-  --sidebar-accent-foreground: #fafafa;
-  --sidebar-border: rgba(255, 255, 255, 0.08);
-  --sidebar-ring: #e4e4e7;
+  --sidebar-accent-foreground: #f8fafc;
+  --sidebar-border: rgba(255, 255, 255, 0.09);
+  --sidebar-ring: #cbd5e1;
 }
 
 .dark {
   --background: #09090b;
-  --foreground: #fafafa;
-  --card: #121215;
-  --card-foreground: #fafafa;
-  --popover: #121215;
-  --popover-foreground: #fafafa;
+  --foreground: #f8fafc;
+  --card: #111114;
+  --card-foreground: #f8fafc;
+  --popover: #111114;
+  --popover-foreground: #f8fafc;
   --primary: #ffffff;
   --primary-foreground: #09090b;
-  --secondary: #1f1f23;
-  --secondary-foreground: #fafafa;
+  --secondary: #1e1e24;
+  --secondary-foreground: #f8fafc;
   --muted: #18181b;
-  --muted-foreground: #a1a1aa;
+  --muted-foreground: #94a3b8;
   --accent: #27272a;
-  --accent-foreground: #fafafa;
+  --accent-foreground: #f8fafc;
   --destructive: #f43f5e;
-  --border: rgba(255, 255, 255, 0.08);
-  --input: rgba(255, 255, 255, 0.1);
-  --ring: #e4e4e7;
+  --border: rgba(255, 255, 255, 0.09);
+  --input: rgba(255, 255, 255, 0.12);
+  --ring: #cbd5e1;
   --sidebar: #0e0e11;
-  --sidebar-foreground: #fafafa;
+  --sidebar-foreground: #f8fafc;
   --sidebar-primary: #ffffff;
   --sidebar-primary-foreground: #09090b;
   --sidebar-accent: #18181b;
-  --sidebar-accent-foreground: #fafafa;
-  --sidebar-border: rgba(255, 255, 255, 0.08);
-  --sidebar-ring: #e4e4e7;
+  --sidebar-accent-foreground: #f8fafc;
+  --sidebar-border: rgba(255, 255, 255, 0.09);
+  --sidebar-ring: #cbd5e1;
 }
 
 @layer base {
@@ -109,66 +109,185 @@
   body {
     @apply bg-background text-foreground;
   }
-  /* Ensure inputs have at least 16px font-size on mobile to prevent iOS zooming */
   input, select, textarea {
     font-size: 16px;
   }
 }
 
-/* ─── Custom Utility Classes ─── */
+/* ─── High-End Metallic Titanium & Platinum Design System ─── */
 
-/* Sleek obsidian glass card */
+/* Brushed Titanium Glass Surface */
+.metallic-card,
 .glass-card {
-  background: rgba(18, 18, 22, 0.75);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  position: relative;
+  background: linear-gradient(180deg, rgba(28, 28, 35, 0.78) 0%, rgba(13, 13, 17, 0.92) 100%);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  box-shadow: 
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.16),
+    inset 0 -1px 0 0 rgba(0, 0, 0, 0.5),
+    0 12px 36px -10px rgba(0, 0, 0, 0.85);
 }
 
-/* Sleek metallic badges */
+/* Top Specular Rim for Luxury Metallic Look */
+.metallic-card::before,
+.glass-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 15%;
+  right: 15%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.32) 50%, transparent 100%);
+  pointer-events: none;
+  border-radius: inherit;
+}
+
+/* Elevated Metallic Surface for List Items & Inner Containers */
+.metallic-surface {
+  position: relative;
+  background: linear-gradient(180deg, rgba(32, 32, 40, 0.55) 0%, rgba(18, 18, 24, 0.75) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.12),
+    0 4px 16px -4px rgba(0, 0, 0, 0.5);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.metallic-surface:hover {
+  background: linear-gradient(180deg, rgba(42, 42, 52, 0.70) 0%, rgba(24, 24, 32, 0.88) 100%);
+  border-color: rgba(255, 255, 255, 0.18);
+  box-shadow: 
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.22),
+    0 6px 20px -4px rgba(0, 0, 0, 0.65);
+}
+
+/* Polished Medallion Avatar */
+.metallic-medallion {
+  background: radial-gradient(circle at 35% 30%, #464654 0%, #22222b 60%, #131317 100%);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  box-shadow: 
+    inset 0 1px 1px 0 rgba(255, 255, 255, 0.35),
+    inset 0 -2px 4px 0 rgba(0, 0, 0, 0.6),
+    0 4px 12px rgba(0, 0, 0, 0.45);
+}
+
+/* Platinum Chrome Button */
+.metallic-btn-platinum {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(180deg, #ffffff 0%, #e2e8f0 45%, #cbd5e1 100%);
+  color: #09090b;
+  border: 1px solid rgba(255, 255, 255, 0.95);
+  box-shadow: 
+    inset 0 1px 0 0 #ffffff,
+    inset 0 -1px 0 0 rgba(0, 0, 0, 0.25),
+    0 4px 16px -2px rgba(255, 255, 255, 0.15),
+    0 8px 24px -4px rgba(0, 0, 0, 0.6);
+  font-weight: 700;
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.metallic-btn-platinum:hover {
+  background: linear-gradient(180deg, #ffffff 0%, #f8fafc 40%, #e2e8f0 100%);
+  border-color: #ffffff;
+  box-shadow: 
+    inset 0 1px 0 0 #ffffff,
+    0 6px 24px -2px rgba(255, 255, 255, 0.3),
+    0 10px 28px -4px rgba(0, 0, 0, 0.7);
+  transform: translateY(-1px);
+}
+.metallic-btn-platinum:active {
+  transform: translateY(0) scale(0.98);
+}
+
+/* Brushed Gunmetal Steel Button */
+.metallic-btn-steel {
+  background: linear-gradient(180deg, #2c2c34 0%, #1a1a20 100%);
+  color: #f8fafc;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.20),
+    inset 0 -1px 0 0 rgba(0, 0, 0, 0.4),
+    0 4px 14px -2px rgba(0, 0, 0, 0.6);
+  font-weight: 600;
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.metallic-btn-steel:hover {
+  background: linear-gradient(180deg, #3d3d49 0%, #25252e 100%);
+  border-color: rgba(255, 255, 255, 0.28);
+  box-shadow: 
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.28),
+    0 6px 18px -2px rgba(0, 0, 0, 0.7);
+  transform: translateY(-1px);
+}
+.metallic-btn-steel:active {
+  transform: translateY(0) scale(0.98);
+}
+
+/* Metallic Badges & Chips */
+.gradient-brand,
 .gradient-emerald,
 .gradient-violet,
-.gradient-brand {
-  background: linear-gradient(135deg, #27272a, #141417);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  color: #ffffff;
+.metallic-badge {
+  background: linear-gradient(180deg, #30303a 0%, #191920 100%);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.22);
+  color: #f8fafc;
 }
 
-/* Text gradients - refined silver & white metallic */
+.metallic-badge-positive {
+  background: linear-gradient(180deg, rgba(16, 185, 129, 0.2) 0%, rgba(5, 150, 105, 0.12) 100%);
+  border: 1px solid rgba(52, 211, 153, 0.4);
+  box-shadow: inset 0 1px 0 0 rgba(110, 231, 183, 0.35);
+  color: #6ee7b7;
+}
+
+.metallic-badge-negative {
+  background: linear-gradient(180deg, rgba(244, 63, 94, 0.2) 0%, rgba(225, 29, 72, 0.12) 100%);
+  border: 1px solid rgba(251, 113, 133, 0.4);
+  box-shadow: inset 0 1px 0 0 rgba(253, 164, 175, 0.35);
+  color: #fda4af;
+}
+
+.metallic-badge-gold {
+  background: linear-gradient(180deg, rgba(251, 191, 36, 0.2) 0%, rgba(217, 119, 6, 0.12) 100%);
+  border: 1px solid rgba(252, 211, 77, 0.4);
+  box-shadow: inset 0 1px 0 0 rgba(253, 230, 138, 0.35);
+  color: #fde68a;
+}
+
+/* Metallic Text Gradients */
 .text-gradient-emerald,
 .text-gradient-violet,
-.text-gradient-mixed {
-  background: linear-gradient(135deg, #ffffff 30%, #a1a1aa 100%);
+.text-gradient-mixed,
+.metallic-text,
+.metallic-silver-text {
+  background: linear-gradient(180deg, #ffffff 10%, #e2e8f0 50%, #94a3b8 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
-/* Subtle glow effects */
+.metallic-gold-text {
+  background: linear-gradient(180deg, #fef08a 0%, #f59e0b 55%, #b45309 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Subtle metallic glow */
 .glow-emerald,
-.glow-violet {
-  box-shadow: 0 0 40px rgba(255, 255, 255, 0.03),
-              0 0 80px rgba(0, 0, 0, 0.5);
+.glow-violet,
+.metallic-glow {
+  box-shadow: 0 0 50px rgba(255, 255, 255, 0.05),
+              inset 0 1px 0 0 rgba(255, 255, 255, 0.2);
 }
 
-/* Pulse animation */
-@keyframes pulse-glow {
-  0%, 100% {
-    opacity: 0.25;
-  }
-  50% {
-    opacity: 0.5;
-  }
-}
-
-.animate-pulse-glow {
-  animation: pulse-glow 6s ease-in-out infinite;
-}
-
-/* Subtle grid background */
+/* Metallic Ambient Grid */
 .bg-grid {
   background-image: 
-    linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-  background-size: 48px 48px;
+    linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+  background-size: 40px 40px;
 }

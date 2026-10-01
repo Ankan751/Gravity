@@ -131,16 +131,16 @@ export default function DashboardClient({ user, groups }: DashboardProps) {
         {/* Navbar */}
         <div className="flex items-center justify-between pb-2">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-gradient-to-br from-zinc-700 to-zinc-900 border border-zinc-700/60 flex items-center justify-center font-bold text-sm sm:text-base text-white shadow-sm">
+            <div className="metallic-medallion w-8 h-8 sm:w-9 sm:h-9 rounded-xl flex items-center justify-center font-bold text-sm sm:text-base text-white shadow-md">
               S
             </div>
             <span className="text-lg sm:text-xl font-bold tracking-tight text-white">
-              Split<span className="text-zinc-400">Ease</span>
+              Split<span className="metallic-silver-text">Ease</span>
             </span>
           </div>
           <button
             onClick={handleSignOut}
-            className="flex items-center gap-1.5 px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl text-xs sm:text-sm text-zinc-400 hover:text-white border border-zinc-800 hover:border-zinc-700 bg-zinc-900/60 transition-all cursor-pointer"
+            className="metallic-btn-steel flex items-center gap-1.5 px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl text-xs sm:text-sm cursor-pointer"
           >
             <LogOut className="w-3.5 h-3.5" />
             Sign Out
@@ -148,14 +148,14 @@ export default function DashboardClient({ user, groups }: DashboardProps) {
         </div>
 
         {/* Welcome Card */}
-        <div className="glass-card rounded-2xl p-5 sm:p-7 border border-zinc-800">
+        <div className="metallic-card rounded-2xl p-5 sm:p-7">
           <div className="flex items-center gap-4 sm:gap-5">
-            <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-zinc-800 border border-zinc-700/80 flex items-center justify-center text-xl sm:text-2xl font-bold text-white shrink-0">
+            <div className="metallic-medallion w-12 h-12 sm:w-14 sm:h-14 rounded-2xl flex items-center justify-center text-xl sm:text-2xl font-bold text-white shrink-0 shadow-lg">
               {user.name?.charAt(0)?.toUpperCase() || "U"}
             </div>
             <div className="min-w-0 flex-1">
               <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-white truncate">
-                Welcome, {user.name ?? "User"}
+                Welcome, <span className="metallic-silver-text">{user.name ?? "User"}</span>
               </h1>
               <p className="text-zinc-400 text-xs sm:text-sm mt-0.5 truncate">{user.email}</p>
             </div>
@@ -164,24 +164,24 @@ export default function DashboardClient({ user, groups }: DashboardProps) {
 
         {/* Stats Row */}
         <div className="grid grid-cols-3 gap-2.5 sm:gap-4">
-          <div className="glass-card rounded-xl sm:rounded-2xl p-3.5 sm:p-5 text-center border border-zinc-800/80">
-            <div className="text-xl sm:text-2xl font-bold text-white">{groups.length}</div>
+          <div className="metallic-card rounded-xl sm:rounded-2xl p-3.5 sm:p-5 text-center">
+            <div className="text-xl sm:text-2xl font-extrabold metallic-silver-text">{groups.length}</div>
             <div className="text-[11px] sm:text-xs text-zinc-400 mt-0.5 flex items-center justify-center gap-1">
               <Users className="w-3 h-3 hidden sm:inline" />
               Groups
             </div>
           </div>
-          <div className="glass-card rounded-xl sm:rounded-2xl p-3.5 sm:p-5 text-center border border-zinc-800/80">
-            <div className="text-xl sm:text-2xl font-bold text-white">Instant</div>
+          <div className="metallic-card rounded-xl sm:rounded-2xl p-3.5 sm:p-5 text-center">
+            <div className="text-xl sm:text-2xl font-extrabold metallic-silver-text">Instant</div>
             <div className="text-[11px] sm:text-xs text-zinc-400 mt-0.5 flex items-center justify-center gap-1">
               <Zap className="w-3 h-3 hidden sm:inline" />
               Sync
             </div>
           </div>
-          <div className="glass-card rounded-xl sm:rounded-2xl p-3.5 sm:p-5 text-center border border-zinc-800/80">
-            <div className="text-xl sm:text-2xl font-bold text-white">INR (₹)</div>
+          <div className="metallic-card rounded-xl sm:rounded-2xl p-3.5 sm:p-5 text-center">
+            <div className="text-xl sm:text-2xl font-extrabold metallic-gold-text">INR (₹)</div>
             <div className="text-[11px] sm:text-xs text-zinc-400 mt-0.5 flex items-center justify-center gap-1">
-              <Coins className="w-3 h-3 hidden sm:inline" />
+              <Coins className="w-3 h-3 hidden sm:inline text-amber-400/80" />
               Currency
             </div>
           </div>
@@ -195,9 +195,9 @@ export default function DashboardClient({ user, groups }: DashboardProps) {
               setGroupName("");
               setJoinLink("");
             }}
-            className="glass-card rounded-2xl p-4 sm:p-6 text-center hover:border-zinc-700 transition-all duration-200 cursor-pointer active:scale-98 group"
+            className="metallic-card rounded-2xl p-4 sm:p-6 text-center hover:border-zinc-500/50 transition-all duration-200 cursor-pointer active:scale-98 group"
           >
-            <div className="w-10 h-10 sm:w-12 sm:h-12 mx-auto rounded-xl bg-white text-zinc-950 flex items-center justify-center mb-2.5 sm:mb-3 group-hover:scale-105 transition-transform shadow-md">
+            <div className="metallic-btn-platinum w-10 h-10 sm:w-12 sm:h-12 mx-auto rounded-xl flex items-center justify-center mb-2.5 sm:mb-3 group-hover:scale-105 transition-transform shadow-lg">
               <Plus className="w-5 h-5 sm:w-6 sm:h-6 stroke-[2.5]" />
             </div>
             <div className="font-bold text-sm sm:text-base text-white">Create Group</div>
@@ -209,10 +209,10 @@ export default function DashboardClient({ user, groups }: DashboardProps) {
               setJoinOpen(true);
               setToken("");
             }}
-            className="glass-card rounded-2xl p-4 sm:p-6 text-center hover:border-zinc-700 transition-all duration-200 cursor-pointer active:scale-98 group"
+            className="metallic-card rounded-2xl p-4 sm:p-6 text-center hover:border-zinc-500/50 transition-all duration-200 cursor-pointer active:scale-98 group"
           >
-            <div className="w-10 h-10 sm:w-12 sm:h-12 mx-auto rounded-xl bg-zinc-800 border border-zinc-700 text-white flex items-center justify-center mb-2.5 sm:mb-3 group-hover:scale-105 transition-transform shadow-sm">
-              <Link2 className="w-5 h-5 sm:w-6 sm:h-6 stroke-[2]" />
+            <div className="metallic-medallion w-10 h-10 sm:w-12 sm:h-12 mx-auto rounded-xl text-white flex items-center justify-center mb-2.5 sm:mb-3 group-hover:scale-105 transition-transform shadow-md">
+              <Link2 className="w-5 h-5 sm:w-6 sm:h-6 stroke-[2] text-zinc-300" />
             </div>
             <div className="font-bold text-sm sm:text-base text-white">Join Group</div>
             <p className="text-[11px] sm:text-xs text-zinc-400 mt-0.5">Enter an invite token</p>
@@ -223,15 +223,15 @@ export default function DashboardClient({ user, groups }: DashboardProps) {
         <div className="space-y-3.5">
           <div className="flex items-center justify-between">
             <h2 className="text-lg sm:text-xl font-bold tracking-tight text-white flex items-center gap-2">
-              <span className="w-1.5 h-4 rounded-full bg-zinc-400" />
+              <span className="w-1.5 h-4 rounded-full bg-gradient-to-b from-white via-zinc-400 to-zinc-600" />
               Your Groups
             </h2>
-            <span className="text-xs text-zinc-500 font-medium">{groups.length} active</span>
+            <span className="metallic-badge text-xs px-2.5 py-0.5 rounded-full font-medium">{groups.length} active</span>
           </div>
 
           {groups.length === 0 ? (
-            <div className="glass-card rounded-2xl p-8 sm:p-12 text-center border border-zinc-800/80">
-              <div className="w-12 h-12 rounded-2xl bg-zinc-900 border border-zinc-800 flex items-center justify-center mx-auto mb-3 text-zinc-400">
+            <div className="metallic-card rounded-2xl p-8 sm:p-12 text-center">
+              <div className="metallic-medallion w-12 h-12 rounded-2xl flex items-center justify-center mx-auto mb-3 text-zinc-300 shadow-md">
                 <Users className="w-6 h-6" />
               </div>
               <h3 className="text-base font-semibold text-white mb-1">No groups yet</h3>
@@ -246,19 +246,19 @@ export default function DashboardClient({ user, groups }: DashboardProps) {
                   key={group._id}
                   href={`/group/${group._id}`}
                   prefetch={true}
-                  className="glass-card rounded-xl sm:rounded-2xl p-3.5 sm:p-4 flex items-center gap-3.5 cursor-pointer hover:border-zinc-700 transition-all duration-200 active:scale-99 group border border-zinc-800/70 block"
+                  className="metallic-surface rounded-xl sm:rounded-2xl p-3.5 sm:p-4 flex items-center gap-3.5 cursor-pointer active:scale-99 group block"
                 >
                   <div className="flex items-center gap-3.5 w-full">
-                    <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-zinc-800 border border-zinc-700/80 flex items-center justify-center text-sm sm:text-base font-bold text-white shrink-0 shadow-sm">
+                    <div className="metallic-medallion w-10 h-10 sm:w-11 sm:h-11 rounded-xl flex items-center justify-center text-sm sm:text-base font-bold text-white shrink-0 shadow-md">
                       {group.name.charAt(0).toUpperCase()}
                     </div>
                     <div className="flex-1 min-w-0">
-                      <div className="font-semibold text-sm sm:text-base text-white truncate group-hover:text-zinc-200 transition-colors">
+                      <div className="font-semibold text-sm sm:text-base text-white truncate group-hover:text-zinc-100 transition-colors">
                         {group.name}
                       </div>
-                      <p className="text-[11px] sm:text-xs text-zinc-500 mt-0.5">Tap to view expenses & settlements</p>
+                      <p className="text-[11px] sm:text-xs text-zinc-400 mt-0.5">Tap to view expenses & settlements</p>
                     </div>
-                    <ChevronRight className="w-4 h-4 text-zinc-600 group-hover:text-zinc-300 transition-colors shrink-0" />
+                    <ChevronRight className="w-4 h-4 text-zinc-500 group-hover:text-zinc-200 transition-colors shrink-0" />
                   </div>
                 </Link>
               ))}
@@ -269,7 +269,7 @@ export default function DashboardClient({ user, groups }: DashboardProps) {
 
       {/* CREATE DIALOG */}
       <Dialog open={createOpen} onOpenChange={setCreateOpen}>
-        <DialogContent className="bg-zinc-950 border-zinc-800 rounded-2xl shadow-2xl max-w-sm sm:max-w-md w-[calc(100vw-2rem)] p-5 sm:p-6 text-white">
+        <DialogContent className="metallic-card border-zinc-700/60 rounded-2xl shadow-2xl max-w-sm sm:max-w-md w-[calc(100vw-2rem)] p-5 sm:p-6 text-white">
           <DialogHeader>
             <DialogTitle className="text-lg sm:text-xl font-bold text-white">Create a New Group</DialogTitle>
           </DialogHeader>
@@ -281,14 +281,14 @@ export default function DashboardClient({ user, groups }: DashboardProps) {
                 placeholder="e.g. Goa Trip, Flat 402, Friday Dinner"
                 value={groupName}
                 onChange={(e) => setGroupName(e.target.value)}
-                className="bg-zinc-900 border-zinc-800 text-white rounded-xl h-11 text-base placeholder:text-zinc-600 focus:border-zinc-600"
+                className="bg-zinc-900/90 border-zinc-700/80 text-white rounded-xl h-11 text-base placeholder:text-zinc-500 focus:border-zinc-400"
               />
             </div>
 
             <button
               onClick={confirmGroupCreation}
               disabled={loading || !groupName.trim()}
-              className="w-full py-3 rounded-xl bg-white hover:bg-zinc-200 text-zinc-950 font-semibold text-sm transition-all disabled:opacity-50 cursor-pointer shadow-sm active:scale-98"
+              className="metallic-btn-platinum w-full py-3 rounded-xl font-bold text-sm shadow-md disabled:opacity-50 cursor-pointer"
             >
               {loading ? "Creating..." : "Create Group"}
             </button>
@@ -296,7 +296,7 @@ export default function DashboardClient({ user, groups }: DashboardProps) {
             {joinLink && (
               <div className="pt-2 border-t border-zinc-800/80 space-y-2">
                 <label className="text-xs text-zinc-400 font-medium">Invite Link</label>
-                <div className="flex items-center gap-2 bg-zinc-900 border border-zinc-800 p-2 rounded-xl">
+                <div className="flex items-center gap-2 bg-zinc-900/90 border border-zinc-700/70 p-2 rounded-xl">
                   <input
                     type="text"
                     readOnly
@@ -305,9 +305,9 @@ export default function DashboardClient({ user, groups }: DashboardProps) {
                   />
                   <button
                     onClick={copyLink}
-                    className="px-2.5 py-1.5 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-xs font-semibold text-white flex items-center gap-1 transition cursor-pointer"
+                    className="metallic-btn-steel px-2.5 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1 cursor-pointer"
                   >
-                    {copied ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
+                    {copied ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
                     {copied ? "Copied" : "Copy"}
                   </button>
                 </div>
@@ -319,7 +319,7 @@ export default function DashboardClient({ user, groups }: DashboardProps) {
 
       {/* JOIN DIALOG */}
       <Dialog open={joinOpen} onOpenChange={setJoinOpen}>
-        <DialogContent className="bg-zinc-950 border-zinc-800 rounded-2xl shadow-2xl max-w-sm sm:max-w-md w-[calc(100vw-2rem)] p-5 sm:p-6 text-white">
+        <DialogContent className="metallic-card border-zinc-700/60 rounded-2xl shadow-2xl max-w-sm sm:max-w-md w-[calc(100vw-2rem)] p-5 sm:p-6 text-white">
           <DialogHeader>
             <DialogTitle className="text-lg sm:text-xl font-bold text-white">Join a Group</DialogTitle>
           </DialogHeader>
@@ -331,14 +331,14 @@ export default function DashboardClient({ user, groups }: DashboardProps) {
                 placeholder="Paste token or link suffix"
                 value={token}
                 onChange={(e) => setToken(e.target.value)}
-                className="bg-zinc-900 border-zinc-800 text-white rounded-xl h-11 text-base placeholder:text-zinc-600 focus:border-zinc-600"
+                className="bg-zinc-900/90 border-zinc-700/80 text-white rounded-xl h-11 text-base placeholder:text-zinc-500 focus:border-zinc-400"
               />
             </div>
 
             <button
               onClick={joinGroup}
               disabled={loading || !token.trim()}
-              className="w-full py-3 rounded-xl bg-white hover:bg-zinc-200 text-zinc-950 font-semibold text-sm transition-all disabled:opacity-50 cursor-pointer shadow-sm active:scale-98"
+              className="metallic-btn-platinum w-full py-3 rounded-xl font-bold text-sm shadow-md disabled:opacity-50 cursor-pointer"
             >
               {loading ? "Joining..." : "Join Group"}
             </button>

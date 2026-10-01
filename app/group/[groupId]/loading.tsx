@@ -24,8 +24,8 @@ export default function GroupLoading() {
         </div>
 
         {/* Members & Balances Skeleton */}
-        <div className="glass-card rounded-2xl overflow-hidden border border-zinc-800/80">
-          <div className="px-4 sm:px-6 py-4 border-b border-zinc-800/70 flex items-center justify-between">
+        <div className="metallic-card rounded-2xl overflow-hidden">
+          <div className="px-4 sm:px-6 py-4 border-b border-zinc-800/80 flex items-center justify-between">
             <div className="h-5 w-44 bg-zinc-800 rounded-lg" />
             <div className="h-4 w-16 bg-zinc-900 rounded-md" />
           </div>
@@ -33,9 +33,9 @@ export default function GroupLoading() {
             {[1, 2, 3].map((i) => (
               <div
                 key={i}
-                className="flex items-center gap-3.5 p-3 sm:p-3.5 rounded-xl bg-zinc-900/40 border border-zinc-800/50"
+                className="metallic-surface flex items-center gap-3.5 p-3 sm:p-3.5 rounded-xl"
               >
-                <div className="w-10 h-10 rounded-xl bg-zinc-800 shrink-0" />
+                <div className="metallic-medallion w-10 h-10 rounded-xl shrink-0" />
                 <div className="flex-1 space-y-1.5">
                   <div className="h-4 w-28 bg-zinc-800 rounded" />
                   <div className="h-3 w-36 bg-zinc-900 rounded" />
@@ -47,28 +47,28 @@ export default function GroupLoading() {
         </div>
 
         {/* Suggested Payments Skeleton */}
-        <div className="glass-card rounded-2xl overflow-hidden border border-zinc-800/80">
-          <div className="px-4 sm:px-6 py-4 border-b border-zinc-800/70">
+        <div className="metallic-card rounded-2xl overflow-hidden">
+          <div className="px-4 sm:px-6 py-4 border-b border-zinc-800/80">
             <div className="h-5 w-40 bg-zinc-800 rounded-lg" />
           </div>
           <div className="p-3 sm:p-4 space-y-2">
-            <div className="h-12 bg-zinc-900/40 rounded-xl border border-zinc-800/50" />
+            <div className="h-12 metallic-surface rounded-xl" />
           </div>
         </div>
 
         {/* Activity History Skeleton */}
-        <div className="glass-card rounded-2xl overflow-hidden border border-zinc-800/80">
-          <div className="px-4 sm:px-6 py-4 border-b border-zinc-800/70">
+        <div className="metallic-card rounded-2xl overflow-hidden">
+          <div className="px-4 sm:px-6 py-4 border-b border-zinc-800/80">
             <div className="h-5 w-36 bg-zinc-800 rounded-lg" />
           </div>
           <div className="p-3 sm:p-4 space-y-2.5">
             {[1, 2].map((i) => (
               <div
                 key={i}
-                className="p-3.5 sm:p-4 rounded-xl bg-zinc-900/40 border border-zinc-800/50 flex items-center justify-between"
+                className="metallic-surface p-3.5 sm:p-4 rounded-xl flex items-center justify-between"
               >
                 <div className="flex items-center gap-3">
-                  <div className="w-9 h-9 rounded-xl bg-zinc-800 shrink-0" />
+                  <div className="metallic-medallion w-9 h-9 rounded-xl shrink-0" />
                   <div className="space-y-1.5">
                     <div className="h-4 w-32 bg-zinc-800 rounded" />
                     <div className="h-3 w-24 bg-zinc-900 rounded" />
