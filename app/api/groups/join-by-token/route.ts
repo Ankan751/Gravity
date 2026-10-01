@@ -4,6 +4,7 @@ import GroupMember from "@/models/GroupMember";
 import User from "@/models/User";
 import { auth } from "@/auth";
 import { revalidatePath } from "next/cache";
+import { invalidateCache } from "@/lib/cache";
 
 export async function POST(request: Request) {
   const session = await auth();
@@ -31,6 +32,7 @@ export async function POST(request: Request) {
     if (err.code !== 11000) throw err;
   }
 
+  invalidateCache(`group:${group._id}`);
   revalidatePath("/dashboard");
   revalidatePath(`/group/${group._id}`);
 

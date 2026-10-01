@@ -121,8 +121,8 @@ export async function POST(request: Request) {
         await dbSession.commitTransaction();
         dbSession.endSession();
 
-        // Invalidate cached group history and revalidate pages
-        invalidateCache(`group-history-${groupId}`);
+        // Invalidate cached group data/history and revalidate pages
+        invalidateCache(`group:${groupId}`);
         revalidatePath(`/group/${groupId}`);
         revalidatePath("/dashboard");
 

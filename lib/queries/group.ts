@@ -26,7 +26,7 @@ export type HistoryItem = {
  * Cached in-memory with automatic invalidation on new expenses/settlements.
  */
 export async function getGroupHistory(groupId: string): Promise<HistoryItem[]> {
-  const cacheKey = `group-history-${groupId}`;
+  const cacheKey = `group:${groupId}:history`;
   const cachedData = getCached<HistoryItem[]>(cacheKey);
   if (cachedData) {
     return cachedData;

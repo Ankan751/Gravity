@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { Input } from "@/components/ui/input";
 import {
   Dialog,
@@ -241,22 +242,25 @@ export default function DashboardClient({ user, groups }: DashboardProps) {
           ) : (
             <div className="grid gap-2.5 sm:gap-3">
               {groups.map((group) => (
-                <div
+                <Link
                   key={group._id}
-                  onClick={() => router.push(`/group/${group._id}`)}
-                  className="glass-card rounded-xl sm:rounded-2xl p-3.5 sm:p-4 flex items-center gap-3.5 cursor-pointer hover:border-zinc-700 transition-all duration-200 active:scale-99 group border border-zinc-800/70"
+                  href={`/group/${group._id}`}
+                  prefetch={true}
+                  className="glass-card rounded-xl sm:rounded-2xl p-3.5 sm:p-4 flex items-center gap-3.5 cursor-pointer hover:border-zinc-700 transition-all duration-200 active:scale-99 group border border-zinc-800/70 block"
                 >
-                  <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-zinc-800 border border-zinc-700/80 flex items-center justify-center text-sm sm:text-base font-bold text-white shrink-0 shadow-sm">
-                    {group.name.charAt(0).toUpperCase()}
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="font-semibold text-sm sm:text-base text-white truncate group-hover:text-zinc-200 transition-colors">
-                      {group.name}
+                  <div className="flex items-center gap-3.5 w-full">
+                    <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-zinc-800 border border-zinc-700/80 flex items-center justify-center text-sm sm:text-base font-bold text-white shrink-0 shadow-sm">
+                      {group.name.charAt(0).toUpperCase()}
                     </div>
-                    <p className="text-[11px] sm:text-xs text-zinc-500 mt-0.5">Tap to view expenses & settlements</p>
+                    <div className="flex-1 min-w-0">
+                      <div className="font-semibold text-sm sm:text-base text-white truncate group-hover:text-zinc-200 transition-colors">
+                        {group.name}
+                      </div>
+                      <p className="text-[11px] sm:text-xs text-zinc-500 mt-0.5">Tap to view expenses & settlements</p>
+                    </div>
+                    <ChevronRight className="w-4 h-4 text-zinc-600 group-hover:text-zinc-300 transition-colors shrink-0" />
                   </div>
-                  <ChevronRight className="w-4 h-4 text-zinc-600 group-hover:text-zinc-300 transition-colors shrink-0" />
-                </div>
+                </Link>
               ))}
             </div>
           )}
