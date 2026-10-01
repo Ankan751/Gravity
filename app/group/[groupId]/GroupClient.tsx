@@ -32,12 +32,21 @@ type SettlementItem = {
   amount: number;
 };
 
+type HistorySplit = {
+  name: string;
+  amount: number;
+};
+
 type HistoryItem = {
   type: "expense" | "settlement";
+  id?: string;
   createdAt: string;
   amount: number;
   title: string;
   user: string;
+  splitType?: string;
+  splits?: HistorySplit[];
+  note?: string;
 };
 
 type Props = {
@@ -340,44 +349,83 @@ export default function GroupClient({
             ) : (
               history.map((item, i) => (
                 <div
-                  key={i}
-                  className="flex items-center gap-4 p-4 rounded-xl bg-white/[0.02] hover:bg-white/[0.04] transition-colors"
+                  key={item.id || i}
+                  className="p-4 rounded-xl bg-white/[0.02] hover:bg-white/[0.04] border border-white/[0.03] transition-all space-y-2.5"
                 >
-                  {/* Type icon */}
-                  <div
-                    className={`w-10 h-10 rounded-xl flex items-center justify-center text-lg shrink-0 ${item.type === "expense"
-                        ? "bg-emerald-500/10 border border-emerald-500/20"
-                        : "bg-violet-500/10 border border-violet-500/20"
-                      }`}
-                  >
-                    {item.type === "expense" ? "💰" : "🤝"}
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="flex items-start gap-3 min-w-0 flex-1">
+                      {/* Type icon */}
+                      <div
+                        className={`w-10 h-10 rounded-xl flex items-center justify-center text-lg shrink-0 mt-0.5 ${item.type === "expense"
+                            ? "bg-emerald-500/10 border border-emerald-500/20"
+                            : "bg-violet-500/10 border border-violet-500/20"
+                          }`}
+                      >
+                        {item.type === "expense" ? "💰" : "🤝"}
+                      </div>
+
+                      <div className="flex-1 min-w-0">
+                        <div className="font-semibold text-sm text-white truncate">
+                          {item.type === "expense"
+                            ? item.title || "Untitled expense"
+                            : item.title}
+                        </div>
+                        <div className="text-xs text-zinc-400 mt-0.5 flex flex-wrap items-center gap-1.5">
+                          <span className="text-zinc-300 font-medium">
+                            {item.type === "expense" ? `Paid by ${item.user}` : item.user}
+                          </span>
+                          <span className="text-zinc-600">•</span>
+                          <span className="text-zinc-500">
+                            {new Date(item.createdAt).toLocaleDateString("en-IN", {
+                              day: "numeric",
+                              month: "short",
+                              year: "numeric",
+                              hour: "2-digit",
+                              minute: "2-digit",
+                            })}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div
+                      className={`font-bold text-sm sm:text-base shrink-0 ${item.type === "expense"
+                          ? "text-emerald-400"
+                          : "text-violet-400"
+                        }`}
+                    >
+                      ₹ {(item.amount / 100).toFixed(2)}
+                    </div>
                   </div>
 
-                  <div className="flex-1 min-w-0">
-                    <div className="font-medium text-sm truncate">
-                      {item.type === "expense"
-                        ? `${item.user} added "${item.title || "Untitled"}"`
-                        : item.title}
+                  {/* Split Breakdown */}
+                  {item.type === "expense" && item.splits && item.splits.length > 0 && (
+                    <div className="pt-2 border-t border-white/[0.04]">
+                      <div className="flex flex-wrap items-center gap-1.5">
+                        <span className="text-[11px] font-medium text-emerald-400/90 bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded-md">
+                          {item.splitType === "exact" ? "Exact split" : "Split equally"} ({item.splits.length}):
+                        </span>
+                        {item.splits.map((s, idx) => (
+                          <span
+                            key={idx}
+                            className="inline-flex items-center gap-1 text-[11px] bg-white/[0.04] border border-white/5 px-2 py-0.5 rounded-md text-zinc-300"
+                          >
+                            <span className="text-zinc-400">{s.name}:</span>
+                            <span className="font-medium text-emerald-300/90">
+                              ₹{(s.amount / 100).toFixed(2)}
+                            </span>
+                          </span>
+                        ))}
+                      </div>
                     </div>
-                    <div className="text-xs text-zinc-500 mt-0.5">
-                      {new Date(item.createdAt).toLocaleDateString("en-IN", {
-                        day: "numeric",
-                        month: "short",
-                        year: "numeric",
-                        hour: "2-digit",
-                        minute: "2-digit",
-                      })}
-                    </div>
-                  </div>
+                  )}
 
-                  <div
-                    className={`font-bold text-sm shrink-0 ${item.type === "expense"
-                        ? "text-emerald-400"
-                        : "text-violet-400"
-                      }`}
-                  >
-                    ₹ {(item.amount / 100).toFixed(2)}
-                  </div>
+                  {/* Settlement Note */}
+                  {item.type === "settlement" && item.note && (
+                    <div className="pt-1.5 border-t border-white/[0.04] text-xs text-zinc-400 italic">
+                      Note: "{item.note}"
+                    </div>
+                  )}
                 </div>
               ))
             )}

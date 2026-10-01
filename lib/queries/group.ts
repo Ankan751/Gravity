@@ -2,17 +2,32 @@ import "@/models";
 import mongoose, { Types } from "mongoose";
 import { connectToDatabase } from "@/lib/db";
 
+export type HistorySplit = {
+  name: string;
+  amount: number;
+};
+
+export type HistoryItem = {
+  type: "expense" | "settlement";
+  id: string;
+  createdAt: string;
+  amount: number;
+  title: string;
+  user: string;
+  splitType?: string;
+  splits?: HistorySplit[];
+  note?: string;
+};
+
 /**
  * Fetches and merges expense + settlement history for a group,
- * sorted newest-first.
- *
- * [CHANGE] Added `as const` assertions on the `type` field so TypeScript
- * narrows them to the literal union "expense" | "settlement" instead of `string`.
+ * including split breakdown with involved members and amounts, sorted newest-first.
  */
 export async function getGroupHistory(groupId: string) {
   await connectToDatabase();
 
   const Expense = mongoose.models.Expense;
+  const ExpenseSplit = mongoose.models.ExpenseSplit;
   const Settlement = mongoose.models.Settlement;
 
   const objectId = new Types.ObjectId(groupId);
@@ -20,34 +35,59 @@ export async function getGroupHistory(groupId: string) {
   // 1️⃣ Fetch expenses
   const expenses = await Expense.find({ groupId: objectId })
     .populate("paidBy", "name email")
+    .sort({ createdAt: -1 })
     .lean();
 
-  // 2️⃣ Fetch settlements
+  // 2️⃣ Fetch splits for all fetched expenses
+  const expenseIds = expenses.map((e: any) => e._id);
+  const splits = await ExpenseSplit.find({ expenseId: { $in: expenseIds } })
+    .populate("userId", "name email")
+    .lean();
+
+  const splitsByExpenseId: Record<string, HistorySplit[]> = {};
+  for (const s of splits as any[]) {
+    const expId = s.expenseId?.toString();
+    if (!expId) continue;
+    if (!splitsByExpenseId[expId]) splitsByExpenseId[expId] = [];
+    splitsByExpenseId[expId].push({
+      name: s.userId?.name?.trim() || s.userId?.email?.split("@")[0] || "Unknown",
+      amount: s.amount,
+    });
+  }
+
+  // 3️⃣ Fetch settlements
   const settlements = await Settlement.find({ groupId: objectId })
     .populate("from to", "name email")
+    .sort({ createdAt: -1 })
     .lean();
 
-  // 3️⃣ Normalize into a common shape
+  // 4️⃣ Normalize into common shape
   const expenseHistory = expenses.map((e: any) => ({
     type: "expense" as const,
-    createdAt: e.createdAt,
+    id: e._id.toString(),
+    createdAt: e.createdAt ? new Date(e.createdAt).toISOString() : new Date().toISOString(),
     amount: e.amount,
-    title: e.description,
-    user: e.paidBy?.name,
+    title: e.description || "Untitled expense",
+    user: e.paidBy?.name?.trim() || e.paidBy?.email?.split("@")[0] || "Unknown",
+    splitType: e.splitType || "equal",
+    splits: splitsByExpenseId[e._id.toString()] || [],
   }));
 
   const settlementHistory = settlements.map((s: any) => ({
     type: "settlement" as const,
-    createdAt: s.createdAt,
+    id: s._id.toString(),
+    createdAt: s.createdAt ? new Date(s.createdAt).toISOString() : new Date().toISOString(),
     amount: s.amount,
-    title: `${s.from?.name} paid ${s.to?.name}`,
-    user: s.from?.name,
+    title: `${s.from?.name?.trim() || "Someone"} paid ${s.to?.name?.trim() || "Someone"}`,
+    user: s.from?.name?.trim() || "Someone",
+    note: s.note,
   }));
 
-  // 4️⃣ Merge + Sort newest first
+  // 5️⃣ Merge + Sort newest first
   return [...expenseHistory, ...settlementHistory].sort(
     (a, b) =>
       new Date(b.createdAt).getTime() -
       new Date(a.createdAt).getTime()
   );
 }
+
