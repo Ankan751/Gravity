@@ -170,26 +170,29 @@ export default function GroupClient({
           <div className="flex items-center gap-3">
             <button
               onClick={() => router.push("/dashboard")}
-              className="metallic-btn-steel w-10 h-10 rounded-xl flex items-center justify-center text-zinc-300 hover:text-white transition-all cursor-pointer shrink-0"
+              className="dev-btn-dark w-10 h-10 rounded-xl flex items-center justify-center text-zinc-400 hover:text-white transition-all cursor-pointer shrink-0"
               aria-label="Back to Dashboard"
             >
               <ArrowLeft className="w-4 h-4" />
             </button>
             <div className="min-w-0 flex-1">
+              <div className="flex items-center gap-2 text-xs font-mono tracking-widest uppercase text-zinc-400 mb-1">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#bef264]" />
+                GROUP LEDGER
+              </div>
               <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-white truncate">
                 {group.name}
               </h1>
-              <p className="text-xs text-zinc-400 mt-0.5">{members.length} members</p>
             </div>
           </div>
 
-          {/* Action Buttons: Full-width 2-column grid on phones, flex on desktop */}
+          {/* Action Buttons */}
           <div className="grid grid-cols-2 gap-2.5 sm:flex sm:justify-end sm:gap-3">
             <button
               onClick={() => setSettleOpen(true)}
-              className="metallic-btn-steel flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl text-xs sm:text-sm font-semibold cursor-pointer"
+              className="dev-btn-dark flex items-center justify-center gap-2 py-2.5 px-4 text-xs sm:text-sm font-medium cursor-pointer"
             >
-              <HandCoins className="w-4 h-4 text-zinc-300" />
+              <HandCoins className="w-4 h-4 text-zinc-400" />
               Settle Up
             </button>
             <button
@@ -200,7 +203,7 @@ export default function GroupClient({
                 setExactAmounts({});
                 setSelectedMembers(members.map((m) => m.userId));
               }}
-              className="metallic-btn-platinum flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl text-xs sm:text-sm font-bold cursor-pointer shadow-lg"
+              className="dev-btn-white flex items-center justify-center gap-2 py-2.5 px-4 text-xs sm:text-sm font-semibold cursor-pointer shadow-lg"
             >
               <Plus className="w-4 h-4 stroke-[2.5]" />
               Add Expense
@@ -208,17 +211,17 @@ export default function GroupClient({
           </div>
         </div>
 
-        {/* Members & Balances Card */}
-        <div className="metallic-card rounded-2xl overflow-hidden">
-          <div className="px-4 sm:px-6 py-3.5 sm:py-4 border-b border-zinc-800/80 flex items-center justify-between">
-            <h2 className="font-bold text-base sm:text-lg text-white flex items-center gap-2">
-              <span className="w-1.5 h-4 rounded-full bg-gradient-to-b from-white via-zinc-400 to-zinc-600" />
-              Members & Balances
-            </h2>
-            <span className="metallic-badge text-[11px] px-2.5 py-0.5 rounded-full font-medium">Live Ledger</span>
+        {/* Members & Balances Box */}
+        <div className="dev-box p-4 sm:p-5 space-y-3">
+          <div className="flex items-center justify-between pb-2 border-b border-zinc-800/80">
+            <div className="flex items-center gap-2 text-xs font-mono tracking-widest uppercase text-zinc-400">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#bef264]" />
+              MEMBERS & BALANCES
+            </div>
+            <span className="text-xs font-mono text-zinc-500">{members.length} members</span>
           </div>
 
-          <div className="p-3 sm:p-4 space-y-2">
+          <div className="space-y-2">
             {members.map((member) => {
               const isPositive = member.balance > 0;
               const isNegative = member.balance < 0;
@@ -227,10 +230,10 @@ export default function GroupClient({
               return (
                 <div
                   key={member._id}
-                  className="metallic-surface flex items-center gap-3 sm:gap-4 p-3 sm:p-3.5 rounded-xl transition-all"
+                  className="dev-surface flex items-center gap-3 sm:gap-4 p-3 sm:p-3.5 rounded-xl transition-all"
                 >
                   {/* Clean Initial Avatar */}
-                  <div className="metallic-medallion w-10 h-10 rounded-xl flex items-center justify-center font-bold text-white text-sm shrink-0 shadow-sm">
+                  <div className="dev-icon-box w-10 h-10 font-mono font-bold text-white text-sm shrink-0">
                     {member.name?.charAt(0)?.toUpperCase() || "?"}
                   </div>
 
@@ -241,37 +244,37 @@ export default function GroupClient({
                         {member.name}
                       </span>
                       {member.userId === currentUserId && (
-                        <span className="metallic-badge text-[10px] px-2 py-0.5 rounded-md font-semibold text-zinc-200">
-                          You
+                        <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-zinc-800 text-zinc-300">
+                          you
                         </span>
                       )}
                       {member.role === "admin" && (
-                        <span className="metallic-badge text-[10px] px-2 py-0.5 rounded-md text-zinc-300">
-                          Admin
+                        <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-zinc-800 text-zinc-400">
+                          admin
                         </span>
                       )}
                     </div>
-                    <p className="text-xs text-zinc-400 truncate mt-0.5">{member.email}</p>
+                    <p className="text-xs text-zinc-500 font-mono truncate mt-0.5">{member.email}</p>
                   </div>
 
                   {/* Clean Balance Tag */}
                   <div className="text-right shrink-0">
                     {isPositive && (
-                      <span className="metallic-badge-positive inline-flex items-center px-2.5 py-0.5 rounded-lg text-xs font-bold">
+                      <span className="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-mono font-semibold text-[#bef264] bg-[#bef264]/10 border border-[#bef264]/20">
                         +₹{formattedAmt}
                       </span>
                     )}
                     {isNegative && (
-                      <span className="metallic-badge-negative inline-flex items-center px-2.5 py-0.5 rounded-lg text-xs font-bold">
+                      <span className="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-mono font-semibold text-rose-400 bg-rose-500/10 border border-rose-500/20">
                         -₹{formattedAmt}
                       </span>
                     )}
                     {!isPositive && !isNegative && (
-                      <span className="metallic-badge inline-flex items-center px-2.5 py-0.5 rounded-lg text-xs font-medium text-zinc-400">
-                        Settled
+                      <span className="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-mono text-zinc-500 bg-zinc-800/40 border border-zinc-800">
+                        settled
                       </span>
                     )}
-                    <div className="text-[10px] text-zinc-400 mt-0.5">
+                    <div className="text-[10px] font-mono text-zinc-500 mt-0.5">
                       {isPositive ? "gets back" : isNegative ? "owes" : "even"}
                     </div>
                   </div>
@@ -281,34 +284,32 @@ export default function GroupClient({
           </div>
         </div>
 
-        {/* Simplified Settlements (Who Pays Whom) */}
-        <div className="metallic-card rounded-2xl overflow-hidden">
-          <div className="px-4 sm:px-6 py-3.5 sm:py-4 border-b border-zinc-800/80">
-            <h2 className="font-bold text-base sm:text-lg text-white flex items-center gap-2">
-              <span className="w-1.5 h-4 rounded-full bg-gradient-to-b from-white via-zinc-400 to-zinc-600" />
-              Suggested Payments
-            </h2>
+        {/* Suggested Payments (Who Pays Whom) */}
+        <div className="dev-box p-4 sm:p-5 space-y-3">
+          <div className="flex items-center gap-2 text-xs font-mono tracking-widest uppercase text-zinc-400 pb-2 border-b border-zinc-800/80">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#bef264]" />
+            SUGGESTED TRANSFERS
           </div>
 
-          <div className="p-3 sm:p-4 space-y-2">
+          <div className="space-y-2">
             {settlements.length === 0 ? (
               <div className="text-center py-6">
-                <CheckCircle2 className="w-8 h-8 mx-auto text-zinc-400 mb-2" />
+                <CheckCircle2 className="w-7 h-7 mx-auto text-[#bef264] mb-2" />
                 <p className="text-zinc-200 text-sm font-semibold">All debts settled</p>
-                <p className="text-xs text-zinc-400 mt-0.5">No pending transfers needed</p>
+                <p className="text-xs font-mono text-zinc-500 mt-0.5">No pending transfers needed</p>
               </div>
             ) : (
               settlements.map((s, i) => (
                 <div
                   key={i}
-                  className="metallic-surface flex items-center justify-between gap-3 p-3 sm:p-3.5 rounded-xl"
+                  className="dev-surface flex items-center justify-between gap-3 p-3 sm:p-3.5 rounded-xl"
                 >
                   <div className="flex items-center gap-2 text-xs sm:text-sm text-zinc-300 min-w-0">
                     <span className="font-semibold text-white truncate max-w-[100px] sm:max-w-none">{s.from}</span>
-                    <ArrowRight className="w-3.5 h-3.5 text-zinc-400 shrink-0" />
+                    <ArrowRight className="w-3.5 h-3.5 text-[#bef264] shrink-0" />
                     <span className="font-semibold text-white truncate max-w-[100px] sm:max-w-none">{s.to}</span>
                   </div>
-                  <div className="metallic-badge-gold font-bold text-xs sm:text-sm px-2.5 py-1 rounded-lg shrink-0 shadow-sm">
+                  <div className="font-mono font-bold text-xs sm:text-sm text-[#bef264] bg-[#bef264]/10 border border-[#bef264]/20 px-2.5 py-1 rounded-lg shrink-0">
                     ₹ {(s.amount / 100).toFixed(2)}
                   </div>
                 </div>
@@ -318,35 +319,33 @@ export default function GroupClient({
         </div>
 
         {/* Activity History */}
-        <div className="metallic-card rounded-2xl overflow-hidden">
-          <div className="px-4 sm:px-6 py-3.5 sm:py-4 border-b border-zinc-800/80">
-            <h2 className="font-bold text-base sm:text-lg text-white flex items-center gap-2">
-              <span className="w-1.5 h-4 rounded-full bg-gradient-to-b from-white via-zinc-400 to-zinc-600" />
-              Activity History
-            </h2>
+        <div className="dev-box p-4 sm:p-5 space-y-3">
+          <div className="flex items-center gap-2 text-xs font-mono tracking-widest uppercase text-zinc-400 pb-2 border-b border-zinc-800/80">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#bef264]" />
+            ACTIVITY LOG
           </div>
 
-          <div className="p-3 sm:p-4 space-y-2.5">
+          <div className="space-y-2.5">
             {history.length === 0 ? (
               <div className="text-center py-8">
-                <Receipt className="w-8 h-8 mx-auto text-zinc-500 mb-2" />
-                <p className="text-zinc-300 text-sm font-medium">No activity yet</p>
-                <p className="text-xs text-zinc-500 mt-0.5">Expenses added will appear here</p>
+                <Receipt className="w-7 h-7 mx-auto text-zinc-600 mb-2" />
+                <p className="text-zinc-400 text-sm font-medium">No activity yet</p>
+                <p className="text-xs font-mono text-zinc-600 mt-0.5">Expenses added will appear here</p>
               </div>
             ) : (
               history.map((item, i) => (
                 <div
                   key={item.id || i}
-                  className="metallic-surface p-3.5 sm:p-4 rounded-xl transition-all space-y-2.5"
+                  className="dev-surface p-3.5 sm:p-4 rounded-xl space-y-2.5"
                 >
                   <div className="flex items-start justify-between gap-3">
                     <div className="flex items-start gap-3 min-w-0 flex-1">
                       {/* Clean Type Icon */}
-                      <div className="metallic-medallion w-9 h-9 rounded-xl flex items-center justify-center text-zinc-200 shrink-0 mt-0.5 shadow-sm">
+                      <div className="dev-icon-box w-9 h-9 text-[#bef264] shrink-0 mt-0.5">
                         {item.type === "expense" ? (
-                          <Receipt className="w-4 h-4 text-zinc-300" />
+                          <Receipt className="w-4 h-4" />
                         ) : (
-                          <HandCoins className="w-4 h-4 text-zinc-300" />
+                          <HandCoins className="w-4 h-4" />
                         )}
                       </div>
 
@@ -356,12 +355,12 @@ export default function GroupClient({
                             ? item.title || "Untitled expense"
                             : item.title}
                         </div>
-                        <div className="text-xs text-zinc-400 mt-0.5 flex flex-wrap items-center gap-1.5">
-                          <span className="text-zinc-300 font-medium">
+                        <div className="text-xs font-mono text-zinc-500 mt-0.5 flex flex-wrap items-center gap-1.5">
+                          <span className="text-zinc-400">
                             {item.type === "expense" ? `Paid by ${item.user}` : item.user}
                           </span>
-                          <span className="text-zinc-500">•</span>
-                          <span className="text-zinc-400">
+                          <span>•</span>
+                          <span>
                             {new Date(item.createdAt).toLocaleDateString("en-IN", {
                               day: "numeric",
                               month: "short",
@@ -374,7 +373,7 @@ export default function GroupClient({
                       </div>
                     </div>
 
-                    <div className="font-extrabold text-sm sm:text-base metallic-silver-text shrink-0">
+                    <div className="font-mono font-bold text-sm sm:text-base text-white shrink-0">
                       ₹ {(item.amount / 100).toFixed(2)}
                     </div>
                   </div>
@@ -383,15 +382,15 @@ export default function GroupClient({
                   {item.type === "expense" && item.splits && item.splits.length > 0 && (
                     <div className="pt-2 border-t border-zinc-800/80">
                       <div className="flex flex-wrap items-center gap-1.5">
-                        <span className="metallic-badge text-[11px] font-semibold px-2 py-0.5 rounded-md">
-                          {item.splitType === "exact" ? "Exact split" : "Split equally"} ({item.splits.length}):
+                        <span className="text-[11px] font-mono font-medium text-zinc-400 bg-zinc-900 border border-zinc-800 px-2 py-0.5 rounded">
+                          {item.splitType === "exact" ? "exact" : "equal"} ({item.splits.length}):
                         </span>
                         {item.splits.map((s, idx) => (
                           <span
                             key={idx}
-                            className="metallic-surface inline-flex items-center gap-1 text-[11px] px-2 py-0.5 rounded-md text-zinc-300"
+                            className="inline-flex items-center gap-1 text-[11px] font-mono bg-zinc-900 border border-zinc-800 px-2 py-0.5 rounded text-zinc-300"
                           >
-                            <span className="text-zinc-400">{s.name}:</span>
+                            <span className="text-zinc-500">{s.name}:</span>
                             <span className="font-semibold text-zinc-200">
                               ₹{(s.amount / 100).toFixed(2)}
                             </span>
@@ -403,8 +402,8 @@ export default function GroupClient({
 
                   {/* Settlement Note */}
                   {item.type === "settlement" && item.note && (
-                    <div className="pt-1.5 border-t border-zinc-800/80 text-xs text-zinc-400 italic">
-                      Note: "{item.note}"
+                    <div className="pt-1.5 border-t border-zinc-800/80 text-xs font-mono text-zinc-400 italic">
+                      note: "{item.note}"
                     </div>
                   )}
                 </div>
@@ -416,19 +415,19 @@ export default function GroupClient({
 
       {/* EXPENSE DIALOG */}
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent className="metallic-card border-zinc-700/60 rounded-2xl shadow-2xl max-w-sm sm:max-w-md w-[calc(100vw-2rem)] max-h-[88vh] overflow-y-auto p-5 sm:p-6 text-white">
+        <DialogContent className="dev-box border-zinc-800 rounded-2xl shadow-2xl max-w-sm sm:max-w-md w-[calc(100vw-2rem)] max-h-[88vh] overflow-y-auto p-6 text-white">
           <DialogHeader>
-            <DialogTitle className="text-lg sm:text-xl font-bold flex items-center gap-2.5 text-white">
-              <span className="metallic-medallion w-8 h-8 rounded-lg flex items-center justify-center text-xs shadow-sm">💰</span>
+            <DialogTitle className="text-base sm:text-lg font-bold flex items-center gap-2 text-white">
+              <span className="w-2 h-2 rounded-full bg-[#bef264]" />
               Add Expense
             </DialogTitle>
           </DialogHeader>
 
           <div className="space-y-4 mt-3">
             <div>
-              <label className="text-xs font-medium text-zinc-400 mb-1.5 block">Amount (₹)</label>
+              <label className="text-xs font-mono text-zinc-400 mb-1.5 block uppercase">Amount (₹)</label>
               <Input
-                className="bg-zinc-900/90 border-zinc-700/70 text-white rounded-xl h-11 text-base placeholder:text-zinc-500 focus:border-zinc-400"
+                className="bg-[#141418] border-zinc-800 text-white rounded-xl h-11 text-base font-mono placeholder:text-zinc-600 focus:border-zinc-500"
                 placeholder="0.00"
                 type="number"
                 value={amount}
@@ -437,9 +436,9 @@ export default function GroupClient({
             </div>
 
             <div>
-              <label className="text-xs font-medium text-zinc-400 mb-1.5 block">Description</label>
+              <label className="text-xs font-mono text-zinc-400 mb-1.5 block uppercase">Description</label>
               <Input
-                className="bg-zinc-900/90 border-zinc-700/70 text-white rounded-xl h-11 text-base placeholder:text-zinc-500 focus:border-zinc-400"
+                className="bg-[#141418] border-zinc-800 text-white rounded-xl h-11 text-sm placeholder:text-zinc-600 focus:border-zinc-500"
                 placeholder="e.g. Dinner, Uber, Groceries"
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
@@ -447,14 +446,14 @@ export default function GroupClient({
             </div>
 
             <div>
-              <label className="text-xs font-medium text-zinc-400 mb-1.5 block">Split Method</label>
-              <div className="grid grid-cols-2 gap-2 metallic-surface p-1 rounded-xl">
+              <label className="text-xs font-mono text-zinc-400 mb-1.5 block uppercase">Split Method</label>
+              <div className="grid grid-cols-2 gap-2 dev-surface p-1 rounded-xl">
                 <button
                   type="button"
                   onClick={() => setSplitType("equal")}
-                  className={`py-2 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                  className={`py-2 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
                     splitType === "equal"
-                      ? "metallic-btn-platinum shadow-md"
+                      ? "dev-btn-white"
                       : "text-zinc-400 hover:text-white"
                   }`}
                 >
@@ -463,9 +462,9 @@ export default function GroupClient({
                 <button
                   type="button"
                   onClick={() => setSplitType("exact")}
-                  className={`py-2 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                  className={`py-2 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
                     splitType === "exact"
-                      ? "metallic-btn-platinum shadow-md"
+                      ? "dev-btn-white"
                       : "text-zinc-400 hover:text-white"
                   }`}
                 >
@@ -475,23 +474,23 @@ export default function GroupClient({
             </div>
 
             <div>
-              <label className="text-xs font-medium text-zinc-400 mb-1.5 block">Participating Members</label>
+              <label className="text-xs font-mono text-zinc-400 mb-1.5 block uppercase">Participating Members</label>
               <div className="space-y-1.5 max-h-48 overflow-y-auto pr-1">
                 {members.map((member) => (
                   <div
                     key={member.userId}
-                    className="metallic-surface flex items-center justify-between p-2.5 rounded-xl"
+                    className="dev-surface flex items-center justify-between p-2.5 rounded-xl"
                   >
                     <label className="flex items-center gap-2.5 text-xs sm:text-sm cursor-pointer select-none flex-1 min-w-0">
                       <input
                         type="checkbox"
                         checked={selectedMembers.includes(member.userId)}
                         onChange={() => toggleMember(member.userId)}
-                        className="w-4 h-4 rounded bg-zinc-800 border-zinc-600 text-white accent-white cursor-pointer"
+                        className="w-4 h-4 rounded bg-zinc-800 border-zinc-700 text-[#bef264] accent-[#bef264] cursor-pointer"
                       />
                       <span className="font-semibold text-zinc-200 truncate">{member.name}</span>
                       {member.userId === currentUserId && (
-                        <span className="metallic-badge text-[10px] px-1.5 py-0.5 rounded text-zinc-300">(You)</span>
+                        <span className="text-[10px] font-mono text-zinc-500">(you)</span>
                       )}
                     </label>
 
@@ -506,7 +505,7 @@ export default function GroupClient({
                             [member.userId]: e.target.value,
                           }))
                         }
-                        className="w-20 bg-zinc-950/90 border-zinc-700/80 rounded-lg text-right h-8 text-xs text-white"
+                        className="w-20 bg-[#0e0e11] border-zinc-700 rounded-lg text-right h-8 text-xs font-mono text-white"
                       />
                     )}
                   </div>
@@ -517,7 +516,7 @@ export default function GroupClient({
             <button
               onClick={handleCreateExpense}
               disabled={loading || !amount || selectedMembers.length === 0}
-              className="metallic-btn-platinum w-full py-3 rounded-xl font-bold text-sm shadow-md disabled:opacity-50 cursor-pointer"
+              className="dev-btn-white w-full py-2.5 rounded-xl font-semibold text-sm disabled:opacity-50 cursor-pointer"
             >
               {loading ? "Adding Expense..." : "Add Expense"}
             </button>
@@ -527,19 +526,19 @@ export default function GroupClient({
 
       {/* SETTLE-UP DIALOG */}
       <Dialog open={settleOpen} onOpenChange={setSettleOpen}>
-        <DialogContent className="metallic-card border-zinc-700/60 rounded-2xl shadow-2xl max-w-sm sm:max-w-md w-[calc(100vw-2rem)] p-5 sm:p-6 text-white">
+        <DialogContent className="dev-box border-zinc-800 rounded-2xl shadow-2xl max-w-sm sm:max-w-md w-[calc(100vw-2rem)] p-6 text-white">
           <DialogHeader>
-            <DialogTitle className="text-lg sm:text-xl font-bold flex items-center gap-2.5 text-white">
-              <span className="metallic-medallion w-8 h-8 rounded-lg flex items-center justify-center text-xs shadow-sm">🤝</span>
+            <DialogTitle className="text-base sm:text-lg font-bold flex items-center gap-2 text-white">
+              <span className="w-2 h-2 rounded-full bg-[#bef264]" />
               Record Settlement
             </DialogTitle>
           </DialogHeader>
 
           <div className="space-y-4 mt-3">
             <div>
-              <label className="text-xs font-medium text-zinc-400 mb-1.5 block">Pay To</label>
+              <label className="text-xs font-mono text-zinc-400 mb-1.5 block uppercase">Pay To</label>
               <select
-                className="w-full h-11 rounded-xl bg-zinc-900/90 border border-zinc-700/70 px-3 text-sm text-white focus:border-zinc-400 focus:outline-none cursor-pointer"
+                className="w-full h-11 rounded-xl bg-[#141418] border border-zinc-800 px-3 text-sm text-white focus:border-zinc-500 focus:outline-none cursor-pointer"
                 value={settleToUserId}
                 onChange={(e) => setSettleToUserId(e.target.value)}
               >
@@ -555,9 +554,9 @@ export default function GroupClient({
             </div>
 
             <div>
-              <label className="text-xs font-medium text-zinc-400 mb-1.5 block">Amount (₹)</label>
+              <label className="text-xs font-mono text-zinc-400 mb-1.5 block uppercase">Amount (₹)</label>
               <Input
-                className="bg-zinc-900/90 border-zinc-700/70 text-white rounded-xl h-11 text-base placeholder:text-zinc-500 focus:border-zinc-400"
+                className="bg-[#141418] border-zinc-800 text-white rounded-xl h-11 text-base font-mono placeholder:text-zinc-600 focus:border-zinc-500"
                 placeholder="0.00"
                 type="number"
                 value={settleAmount}
@@ -566,9 +565,9 @@ export default function GroupClient({
             </div>
 
             <div>
-              <label className="text-xs font-medium text-zinc-400 mb-1.5 block">Note (optional)</label>
+              <label className="text-xs font-mono text-zinc-400 mb-1.5 block uppercase">Note (optional)</label>
               <Input
-                className="bg-zinc-900/90 border-zinc-700/70 text-white rounded-xl h-11 text-base placeholder:text-zinc-500 focus:border-zinc-400"
+                className="bg-[#141418] border-zinc-800 text-white rounded-xl h-11 text-sm placeholder:text-zinc-600 focus:border-zinc-500"
                 placeholder="e.g. UPI payment, Cash"
                 value={settleNote}
                 onChange={(e) => setSettleNote(e.target.value)}
@@ -578,7 +577,7 @@ export default function GroupClient({
             <button
               onClick={handleSettleUp}
               disabled={loading || !settleToUserId || !settleAmount}
-              className="metallic-btn-platinum w-full py-3 rounded-xl font-bold text-sm shadow-md disabled:opacity-50 cursor-pointer"
+              className="dev-btn-white w-full py-2.5 rounded-xl font-semibold text-sm disabled:opacity-50 cursor-pointer"
             >
               {loading ? "Recording..." : "Confirm Settlement"}
             </button>

@@ -31,18 +31,18 @@ export default async function JoinPage(props: {
 
   if (!group) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[#09090b] text-white p-4">
-        <div className="metallic-card max-w-sm w-full rounded-3xl p-6 sm:p-8 text-center space-y-4">
-          <div className="metallic-medallion w-12 h-12 rounded-2xl flex items-center justify-center mx-auto text-xl font-bold text-rose-400 shadow-md">
+      <div className="min-h-screen flex items-center justify-center bg-[#08080a] text-white p-4">
+        <div className="dev-box max-w-sm w-full p-6 sm:p-8 text-center space-y-4">
+          <div className="dev-icon-box w-12 h-12 mx-auto text-xl font-bold text-rose-400">
             ⚠️
           </div>
           <h1 className="text-xl sm:text-2xl font-bold text-white">Invalid Invite Link</h1>
-          <p className="text-zinc-400 text-xs sm:text-sm">
+          <p className="text-zinc-400 text-xs sm:text-sm font-mono">
             This invite link is invalid, expired, or the group was deleted.
           </p>
           <a
             href="/dashboard"
-            className="metallic-btn-platinum inline-block w-full py-3 rounded-xl font-bold text-sm shadow-md cursor-pointer"
+            className="dev-btn-white inline-block w-full py-2.5 rounded-xl font-semibold text-sm cursor-pointer shadow-md"
           >
             Go to Dashboard
           </a>

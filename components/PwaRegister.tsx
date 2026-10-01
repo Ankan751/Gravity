@@ -70,18 +70,18 @@ export default function PwaRegister() {
 
   return (
     <div className="fixed bottom-5 right-5 z-50 max-w-sm w-[calc(100vw-2.5rem)] sm:w-auto animate-in fade-in slide-in-from-bottom-5 duration-300">
-      <div className="metallic-card p-4 rounded-2xl shadow-2xl flex items-center gap-3">
-        <div className="metallic-medallion w-10 h-10 rounded-xl flex items-center justify-center font-bold text-white shrink-0 shadow-md">
+      <div className="dev-box p-4 shadow-2xl flex items-center gap-3">
+        <div className="dev-icon-box w-10 h-10 font-mono font-bold text-white shrink-0">
           S
         </div>
         <div className="flex-1 min-w-0 pr-1">
           <p className="text-sm font-semibold text-white leading-tight">Install SplitEase</p>
-          <p className="text-xs text-zinc-400 mt-0.5 truncate">Fast access & offline bill tracking</p>
+          <p className="text-xs font-mono text-zinc-500 mt-0.5 truncate">Fast access & offline bill ledger</p>
         </div>
         <div className="flex items-center gap-1.5 shrink-0">
           <button
             onClick={handleInstallClick}
-            className="metallic-btn-platinum flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-lg cursor-pointer shadow-md"
+            className="dev-btn-white flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg cursor-pointer shadow-md"
           >
             <Download className="w-3.5 h-3.5" />
             Install
@@ -89,7 +89,7 @@ export default function PwaRegister() {
           <button
             onClick={handleDismiss}
             aria-label="Dismiss install banner"
-            className="p-1.5 text-zinc-400 hover:text-white hover:bg-zinc-800/80 rounded-lg transition-colors cursor-pointer"
+            className="p-1.5 text-zinc-500 hover:text-white rounded-lg transition-colors cursor-pointer"
           >
             <X className="w-4 h-4" />
           </button>
