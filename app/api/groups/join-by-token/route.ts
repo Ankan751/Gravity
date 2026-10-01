@@ -3,6 +3,7 @@ import Group from "@/models/Group";
 import GroupMember from "@/models/GroupMember";
 import User from "@/models/User";
 import { auth } from "@/auth";
+import { revalidatePath } from "next/cache";
 
 export async function POST(request: Request) {
   const session = await auth();
@@ -29,6 +30,9 @@ export async function POST(request: Request) {
   } catch (err: any) {
     if (err.code !== 11000) throw err;
   }
+
+  revalidatePath("/dashboard");
+  revalidatePath(`/group/${group._id}`);
 
   return Response.json({
     groupId: group._id.toString(),

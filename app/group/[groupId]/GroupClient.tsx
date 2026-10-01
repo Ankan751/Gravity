@@ -4,18 +4,14 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardContent,
-} from "@/components/ui/card";
-import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
+import { HistoryItem, HistorySplit } from "@/lib/queries/group";
+import { ArrowLeft, Plus, HandCoins, Receipt, ArrowRight, Check, CheckCircle2 } from "lucide-react";
 
 type Member = {
   _id: string;
@@ -30,23 +26,6 @@ type SettlementItem = {
   from: string;
   to: string;
   amount: number;
-};
-
-type HistorySplit = {
-  name: string;
-  amount: number;
-};
-
-type HistoryItem = {
-  type: "expense" | "settlement";
-  id?: string;
-  createdAt: string;
-  amount: number;
-  title: string;
-  user: string;
-  splitType?: string;
-  splits?: HistorySplit[];
-  note?: string;
 };
 
 type Props = {
@@ -172,62 +151,48 @@ export default function GroupClient({
     }
   };
 
-  // Color helpers
-  const getInitialColor = (index: number) =>
-    index % 2 === 0 ? "gradient-emerald" : "gradient-violet";
-
-  const getBalanceColor = (balance: number) =>
-    balance > 0
-      ? "text-emerald-400"
-      : balance < 0
-        ? "text-red-400"
-        : "text-zinc-400";
-
-  const getBalanceLabel = (balance: number) => {
-    if (balance > 0) return "gets back";
-    if (balance < 0) return "owes";
-    return "settled";
-  };
-
   return (
-    <div className="min-h-screen bg-[#0a0a0f] text-white overflow-hidden">
-      {/* Background effects */}
+    <div className="min-h-screen bg-[#09090b] text-[#fafafa] selection:bg-zinc-800 selection:text-white pb-16">
+      {/* Background ambient lighting */}
       <div className="fixed inset-0 bg-grid opacity-30 pointer-events-none" />
-      <div className="fixed top-[-300px] left-[-100px] w-[500px] h-[500px] rounded-full bg-emerald-500/8 blur-[140px] pointer-events-none" />
-      <div className="fixed bottom-[-200px] right-[-100px] w-[400px] h-[400px] rounded-full bg-violet-500/8 blur-[140px] pointer-events-none" />
+      <div className="fixed top-[-250px] left-[-100px] w-[500px] h-[500px] rounded-full bg-zinc-800/20 blur-[150px] pointer-events-none" />
 
-      <div className="relative z-10 max-w-4xl mx-auto px-6 py-8 space-y-6">
+      <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 py-5 sm:py-8 space-y-5 sm:space-y-6">
         {/* Notification Toast */}
         {notification && (
-          <div className="fixed top-6 right-6 z-50 px-5 py-3 rounded-xl bg-emerald-600/90 backdrop-blur-md shadow-2xl shadow-emerald-500/20 text-sm font-medium animate-in fade-in slide-in-from-top-2 duration-300">
+          <div className="fixed top-5 right-5 z-50 px-4 py-2.5 rounded-xl bg-zinc-900 border border-zinc-700 shadow-2xl text-xs sm:text-sm font-medium text-white animate-in fade-in slide-in-from-top-2 duration-300">
             {notification}
           </div>
         )}
 
-        {/* Header */}
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-4">
+        {/* Header - Mobile Phone Friendly */}
+        <div className="space-y-4">
+          <div className="flex items-center gap-3">
             <button
               onClick={() => router.push("/dashboard")}
-              className="w-10 h-10 rounded-xl border border-zinc-800 hover:border-zinc-600 flex items-center justify-center text-zinc-400 hover:text-white transition-all"
+              className="w-10 h-10 rounded-xl border border-zinc-800 bg-zinc-900/80 hover:border-zinc-700 flex items-center justify-center text-zinc-400 hover:text-white transition-all cursor-pointer shrink-0"
+              aria-label="Back to Dashboard"
             >
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-              </svg>
+              <ArrowLeft className="w-4 h-4" />
             </button>
-            <div>
-              <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">{group.name}</h1>
-              <p className="text-sm text-zinc-500">{members.length} members</p>
+            <div className="min-w-0 flex-1">
+              <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-white truncate">
+                {group.name}
+              </h1>
+              <p className="text-xs text-zinc-400 mt-0.5">{members.length} members</p>
             </div>
           </div>
-          <div className="flex gap-3">
-            <Button
+
+          {/* Action Buttons: Full-width 2-column grid on phones, flex on desktop */}
+          <div className="grid grid-cols-2 gap-2.5 sm:flex sm:justify-end sm:gap-3">
+            <button
               onClick={() => setSettleOpen(true)}
-              className="rounded-xl gradient-violet hover:opacity-90 font-semibold text-white border-0"
+              className="flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl bg-zinc-900 hover:bg-zinc-800 text-zinc-200 border border-zinc-800 text-xs sm:text-sm font-semibold transition-all cursor-pointer active:scale-98 shadow-sm"
             >
-              🤝 Settle Up
-            </Button>
-            <Button
+              <HandCoins className="w-4 h-4 text-zinc-400" />
+              Settle Up
+            </button>
+            <button
               onClick={() => {
                 setOpen(true);
                 setAmount("");
@@ -235,94 +200,115 @@ export default function GroupClient({
                 setExactAmounts({});
                 setSelectedMembers(members.map((m) => m.userId));
               }}
-              className="rounded-xl gradient-emerald hover:opacity-90 font-semibold text-white border-0"
+              className="flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl bg-white hover:bg-zinc-200 text-zinc-950 text-xs sm:text-sm font-bold transition-all cursor-pointer active:scale-98 shadow-md"
             >
-              ＋ Add Expense
-            </Button>
+              <Plus className="w-4 h-4 stroke-[2.5]" />
+              Add Expense
+            </button>
           </div>
         </div>
 
-        {/* Members & Balances */}
-        <div className="glass-card rounded-2xl overflow-hidden">
-          <div className="px-6 py-4 border-b border-white/5">
-            <h2 className="font-bold text-lg flex items-center gap-2">
-              <span className="w-1 h-5 rounded-full bg-emerald-500" />
+        {/* Members & Balances Card */}
+        <div className="glass-card rounded-2xl overflow-hidden border border-zinc-800/80">
+          <div className="px-4 sm:px-6 py-3.5 sm:py-4 border-b border-zinc-800/70 flex items-center justify-between">
+            <h2 className="font-bold text-base sm:text-lg text-white flex items-center gap-2">
+              <span className="w-1.5 h-4 rounded-full bg-zinc-400" />
               Members & Balances
             </h2>
+            <span className="text-xs text-zinc-500 font-medium">Live Ledger</span>
           </div>
-          <div className="p-4 space-y-2">
-            {members.map((member, index) => (
-              <div
-                key={member._id}
-                className="flex items-center gap-4 p-4 rounded-xl bg-white/[0.02] hover:bg-white/[0.04] transition-colors"
-              >
-                {/* Avatar */}
+
+          <div className="p-3 sm:p-4 space-y-2">
+            {members.map((member) => {
+              const isPositive = member.balance > 0;
+              const isNegative = member.balance < 0;
+              const formattedAmt = (Math.abs(member.balance) / 100).toFixed(2);
+
+              return (
                 <div
-                  className={`w-11 h-11 rounded-xl ${getInitialColor(index)} flex items-center justify-center font-bold text-white text-lg shrink-0`}
+                  key={member._id}
+                  className="flex items-center gap-3 sm:gap-4 p-3 sm:p-3.5 rounded-xl bg-zinc-900/40 hover:bg-zinc-900/70 border border-zinc-800/60 transition-colors"
                 >
-                  {member.name?.charAt(0)?.toUpperCase() || "?"}
-                </div>
+                  {/* Clean Initial Avatar */}
+                  <div className="w-10 h-10 rounded-xl bg-zinc-800 border border-zinc-700/80 flex items-center justify-center font-bold text-white text-sm shrink-0 shadow-sm">
+                    {member.name?.charAt(0)?.toUpperCase() || "?"}
+                  </div>
 
-                {/* Name + Email */}
-                <div className="flex-1 min-w-0">
-                  <div className="font-semibold truncate">
-                    {member.name}
-                    {member.userId === currentUserId && (
-                      <span className="ml-2 text-xs px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
-                        You
+                  {/* Member Info */}
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-1.5 flex-wrap">
+                      <span className="font-semibold text-sm text-white truncate max-w-[140px] sm:max-w-[200px]">
+                        {member.name}
+                      </span>
+                      {member.userId === currentUserId && (
+                        <span className="text-[10px] px-1.5 py-0.5 rounded-md bg-zinc-800 text-zinc-300 border border-zinc-700">
+                          You
+                        </span>
+                      )}
+                      {member.role === "admin" && (
+                        <span className="text-[10px] px-1.5 py-0.5 rounded-md bg-zinc-800/80 text-zinc-400 border border-zinc-700/60">
+                          Admin
+                        </span>
+                      )}
+                    </div>
+                    <p className="text-xs text-zinc-500 truncate mt-0.5">{member.email}</p>
+                  </div>
+
+                  {/* Clean Balance Tag */}
+                  <div className="text-right shrink-0">
+                    {isPositive && (
+                      <span className="inline-flex items-center px-2 py-0.5 rounded-lg text-xs font-semibold text-emerald-400 bg-emerald-500/10 border border-emerald-500/20">
+                        +₹{formattedAmt}
                       </span>
                     )}
-                    {member.role === "admin" && (
-                      <span className="ml-2 text-xs px-2 py-0.5 rounded-full bg-violet-500/10 text-violet-400 border border-violet-500/20">
-                        Admin
+                    {isNegative && (
+                      <span className="inline-flex items-center px-2 py-0.5 rounded-lg text-xs font-semibold text-rose-400 bg-rose-500/10 border border-rose-500/20">
+                        -₹{formattedAmt}
                       </span>
                     )}
+                    {!isPositive && !isNegative && (
+                      <span className="inline-flex items-center px-2 py-0.5 rounded-lg text-xs font-medium text-zinc-500 bg-zinc-800/40 border border-zinc-800">
+                        Settled
+                      </span>
+                    )}
+                    <div className="text-[10px] text-zinc-500 mt-0.5">
+                      {isPositive ? "gets back" : isNegative ? "owes" : "even"}
+                    </div>
                   </div>
-                  <p className="text-xs text-zinc-500 truncate">{member.email}</p>
                 </div>
-
-                {/* Balance */}
-                <div className="text-right shrink-0">
-                  <div className={`text-lg font-bold ${getBalanceColor(member.balance)}`}>
-                    ₹ {Math.abs(member.balance / 100).toFixed(2)}
-                  </div>
-                  <div className="text-xs text-zinc-500">{getBalanceLabel(member.balance)}</div>
-                </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
 
-        {/* Settlements (Who Pays Whom) */}
-        <div className="glass-card rounded-2xl overflow-hidden">
-          <div className="px-6 py-4 border-b border-white/5">
-            <h2 className="font-bold text-lg flex items-center gap-2">
-              <span className="w-1 h-5 rounded-full bg-violet-500" />
-              Who Pays Whom
+        {/* Simplified Settlements (Who Pays Whom) */}
+        <div className="glass-card rounded-2xl overflow-hidden border border-zinc-800/80">
+          <div className="px-4 sm:px-6 py-3.5 sm:py-4 border-b border-zinc-800/70">
+            <h2 className="font-bold text-base sm:text-lg text-white flex items-center gap-2">
+              <span className="w-1.5 h-4 rounded-full bg-zinc-400" />
+              Suggested Payments
             </h2>
           </div>
-          <div className="p-4 space-y-2">
+
+          <div className="p-3 sm:p-4 space-y-2">
             {settlements.length === 0 ? (
-              <div className="text-center py-8">
-                <div className="text-4xl mb-3">🎉</div>
-                <p className="text-zinc-400 font-medium">All settled up!</p>
-                <p className="text-xs text-zinc-600 mt-1">No pending payments</p>
+              <div className="text-center py-6">
+                <CheckCircle2 className="w-8 h-8 mx-auto text-zinc-500 mb-2" />
+                <p className="text-zinc-300 text-sm font-medium">All debts settled</p>
+                <p className="text-xs text-zinc-500 mt-0.5">No pending transfers needed</p>
               </div>
             ) : (
               settlements.map((s, i) => (
                 <div
                   key={i}
-                  className="flex items-center gap-3 p-4 rounded-xl bg-white/[0.02]"
+                  className="flex items-center justify-between gap-3 p-3 sm:p-3.5 rounded-xl bg-zinc-900/40 border border-zinc-800/60"
                 >
-                  <div className="w-9 h-9 rounded-lg gradient-violet flex items-center justify-center text-sm font-bold text-white shrink-0">
-                    {s.from.charAt(0).toUpperCase()}
+                  <div className="flex items-center gap-2 text-xs sm:text-sm text-zinc-300 min-w-0">
+                    <span className="font-semibold text-white truncate max-w-[100px] sm:max-w-none">{s.from}</span>
+                    <ArrowRight className="w-3.5 h-3.5 text-zinc-500 shrink-0" />
+                    <span className="font-semibold text-white truncate max-w-[100px] sm:max-w-none">{s.to}</span>
                   </div>
-                  <div className="flex-1 text-sm">
-                    <span className="font-semibold">{s.from}</span>
-                    <span className="text-zinc-500"> pays </span>
-                    <span className="font-semibold">{s.to}</span>
-                  </div>
-                  <div className="text-emerald-400 font-bold">
+                  <div className="font-bold text-sm text-zinc-100 bg-zinc-800/80 border border-zinc-700/60 px-2.5 py-1 rounded-lg shrink-0">
                     ₹ {(s.amount / 100).toFixed(2)}
                   </div>
                 </div>
@@ -331,37 +317,37 @@ export default function GroupClient({
           </div>
         </div>
 
-        {/* History */}
-        <div className="glass-card rounded-2xl overflow-hidden">
-          <div className="px-6 py-4 border-b border-white/5">
-            <h2 className="font-bold text-lg flex items-center gap-2">
-              <span className="w-1 h-5 rounded-full bg-emerald-500" />
+        {/* Activity History */}
+        <div className="glass-card rounded-2xl overflow-hidden border border-zinc-800/80">
+          <div className="px-4 sm:px-6 py-3.5 sm:py-4 border-b border-zinc-800/70">
+            <h2 className="font-bold text-base sm:text-lg text-white flex items-center gap-2">
+              <span className="w-1.5 h-4 rounded-full bg-zinc-400" />
               Activity History
             </h2>
           </div>
-          <div className="p-4 space-y-2">
+
+          <div className="p-3 sm:p-4 space-y-2.5">
             {history.length === 0 ? (
               <div className="text-center py-8">
-                <div className="text-4xl mb-3">📝</div>
-                <p className="text-zinc-400 font-medium">No activity yet</p>
-                <p className="text-xs text-zinc-600 mt-1">Add an expense to get started</p>
+                <Receipt className="w-8 h-8 mx-auto text-zinc-600 mb-2" />
+                <p className="text-zinc-400 text-sm font-medium">No activity yet</p>
+                <p className="text-xs text-zinc-600 mt-0.5">Expenses added will appear here</p>
               </div>
             ) : (
               history.map((item, i) => (
                 <div
                   key={item.id || i}
-                  className="p-4 rounded-xl bg-white/[0.02] hover:bg-white/[0.04] border border-white/[0.03] transition-all space-y-2.5"
+                  className="p-3.5 sm:p-4 rounded-xl bg-zinc-900/40 hover:bg-zinc-900/70 border border-zinc-800/60 transition-all space-y-2.5"
                 >
                   <div className="flex items-start justify-between gap-3">
                     <div className="flex items-start gap-3 min-w-0 flex-1">
-                      {/* Type icon */}
-                      <div
-                        className={`w-10 h-10 rounded-xl flex items-center justify-center text-lg shrink-0 mt-0.5 ${item.type === "expense"
-                            ? "bg-emerald-500/10 border border-emerald-500/20"
-                            : "bg-violet-500/10 border border-violet-500/20"
-                          }`}
-                      >
-                        {item.type === "expense" ? "💰" : "🤝"}
+                      {/* Clean Type Icon */}
+                      <div className="w-9 h-9 rounded-xl bg-zinc-800 border border-zinc-700/80 flex items-center justify-center text-zinc-300 shrink-0 mt-0.5">
+                        {item.type === "expense" ? (
+                          <Receipt className="w-4 h-4" />
+                        ) : (
+                          <HandCoins className="w-4 h-4" />
+                        )}
                       </div>
 
                       <div className="flex-1 min-w-0">
@@ -388,30 +374,25 @@ export default function GroupClient({
                       </div>
                     </div>
 
-                    <div
-                      className={`font-bold text-sm sm:text-base shrink-0 ${item.type === "expense"
-                          ? "text-emerald-400"
-                          : "text-violet-400"
-                        }`}
-                    >
+                    <div className="font-bold text-sm sm:text-base text-white shrink-0">
                       ₹ {(item.amount / 100).toFixed(2)}
                     </div>
                   </div>
 
                   {/* Split Breakdown */}
                   {item.type === "expense" && item.splits && item.splits.length > 0 && (
-                    <div className="pt-2 border-t border-white/[0.04]">
+                    <div className="pt-2 border-t border-zinc-800/80">
                       <div className="flex flex-wrap items-center gap-1.5">
-                        <span className="text-[11px] font-medium text-emerald-400/90 bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded-md">
+                        <span className="text-[11px] font-medium text-zinc-300 bg-zinc-800 border border-zinc-700 px-2 py-0.5 rounded-md">
                           {item.splitType === "exact" ? "Exact split" : "Split equally"} ({item.splits.length}):
                         </span>
                         {item.splits.map((s, idx) => (
                           <span
                             key={idx}
-                            className="inline-flex items-center gap-1 text-[11px] bg-white/[0.04] border border-white/5 px-2 py-0.5 rounded-md text-zinc-300"
+                            className="inline-flex items-center gap-1 text-[11px] bg-zinc-900 border border-zinc-800 px-2 py-0.5 rounded-md text-zinc-300"
                           >
                             <span className="text-zinc-400">{s.name}:</span>
-                            <span className="font-medium text-emerald-300/90">
+                            <span className="font-medium text-zinc-200">
                               ₹{(s.amount / 100).toFixed(2)}
                             </span>
                           </span>
@@ -422,7 +403,7 @@ export default function GroupClient({
 
                   {/* Settlement Note */}
                   {item.type === "settlement" && item.note && (
-                    <div className="pt-1.5 border-t border-white/[0.04] text-xs text-zinc-400 italic">
+                    <div className="pt-1.5 border-t border-zinc-800/80 text-xs text-zinc-400 italic">
                       Note: "{item.note}"
                     </div>
                   )}
@@ -435,19 +416,19 @@ export default function GroupClient({
 
       {/* EXPENSE DIALOG */}
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent className="bg-[#12121a] border-zinc-800/50 rounded-2xl shadow-2xl max-h-[90vh] overflow-y-auto">
+        <DialogContent className="bg-zinc-950 border-zinc-800 rounded-2xl shadow-2xl max-w-sm sm:max-w-md w-[calc(100vw-2rem)] max-h-[88vh] overflow-y-auto p-5 sm:p-6 text-white">
           <DialogHeader>
-            <DialogTitle className="text-xl font-bold flex items-center gap-2">
-              <span className="w-8 h-8 rounded-lg gradient-emerald flex items-center justify-center text-sm">💰</span>
+            <DialogTitle className="text-lg sm:text-xl font-bold flex items-center gap-2 text-white">
+              <span className="w-7 h-7 rounded-lg bg-zinc-800 border border-zinc-700 flex items-center justify-center text-xs">💰</span>
               Add Expense
             </DialogTitle>
           </DialogHeader>
 
-          <div className="space-y-4 mt-2">
+          <div className="space-y-4 mt-3">
             <div>
-              <label className="text-xs text-zinc-500 mb-1.5 block">Amount (₹)</label>
+              <label className="text-xs font-medium text-zinc-400 mb-1.5 block">Amount (₹)</label>
               <Input
-                className="bg-[#1e1e2e] border-zinc-800 rounded-xl h-12 text-lg focus:border-emerald-500/50"
+                className="bg-zinc-900 border-zinc-800 text-white rounded-xl h-11 text-base placeholder:text-zinc-600 focus:border-zinc-600"
                 placeholder="0.00"
                 type="number"
                 value={amount}
@@ -456,9 +437,9 @@ export default function GroupClient({
             </div>
 
             <div>
-              <label className="text-xs text-zinc-500 mb-1.5 block">Description</label>
+              <label className="text-xs font-medium text-zinc-400 mb-1.5 block">Description</label>
               <Input
-                className="bg-[#1e1e2e] border-zinc-800 rounded-xl h-12 focus:border-emerald-500/50"
+                className="bg-zinc-900 border-zinc-800 text-white rounded-xl h-11 text-base placeholder:text-zinc-600 focus:border-zinc-600"
                 placeholder="e.g. Dinner, Uber, Groceries"
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
@@ -466,23 +447,27 @@ export default function GroupClient({
             </div>
 
             <div>
-              <label className="text-xs text-zinc-500 mb-1.5 block">Split Type</label>
-              <div className="flex gap-2">
+              <label className="text-xs font-medium text-zinc-400 mb-1.5 block">Split Method</label>
+              <div className="grid grid-cols-2 gap-2 bg-zinc-900 p-1 rounded-xl border border-zinc-800">
                 <button
+                  type="button"
                   onClick={() => setSplitType("equal")}
-                  className={`flex-1 py-3 rounded-xl text-sm font-semibold transition-all ${splitType === "equal"
-                      ? "gradient-emerald text-white"
-                      : "bg-[#1e1e2e] text-zinc-400 hover:text-white border border-zinc-800"
-                    }`}
+                  className={`py-2 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
+                    splitType === "equal"
+                      ? "bg-white text-zinc-950 shadow-sm"
+                      : "text-zinc-400 hover:text-white"
+                  }`}
                 >
                   Equal Split
                 </button>
                 <button
+                  type="button"
                   onClick={() => setSplitType("exact")}
-                  className={`flex-1 py-3 rounded-xl text-sm font-semibold transition-all ${splitType === "exact"
-                      ? "gradient-violet text-white"
-                      : "bg-[#1e1e2e] text-zinc-400 hover:text-white border border-zinc-800"
-                    }`}
+                  className={`py-2 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
+                    splitType === "exact"
+                      ? "bg-white text-zinc-950 shadow-sm"
+                      : "text-zinc-400 hover:text-white"
+                  }`}
                 >
                   Exact Amounts
                 </button>
@@ -490,79 +475,71 @@ export default function GroupClient({
             </div>
 
             <div>
-              <label className="text-xs text-zinc-500 mb-1.5 block">Split Between</label>
-              <div className="space-y-2 max-h-48 overflow-y-auto pr-1">
+              <label className="text-xs font-medium text-zinc-400 mb-1.5 block">Participating Members</label>
+              <div className="space-y-1.5 max-h-48 overflow-y-auto pr-1">
                 {members.map((member) => (
                   <div
                     key={member.userId}
-                    className="flex items-center justify-between p-3 rounded-xl bg-[#1e1e2e] border border-zinc-800/50"
+                    className="flex items-center justify-between p-2.5 rounded-xl bg-zinc-900/90 border border-zinc-800/80"
                   >
-                    <label className="flex items-center gap-3 text-sm cursor-pointer">
+                    <label className="flex items-center gap-2.5 text-xs sm:text-sm cursor-pointer select-none flex-1 min-w-0">
                       <input
                         type="checkbox"
                         checked={selectedMembers.includes(member.userId)}
                         onChange={() => toggleMember(member.userId)}
-                        className="w-4 h-4 rounded accent-emerald-500"
+                        className="w-4 h-4 rounded bg-zinc-800 border-zinc-700 text-white accent-white cursor-pointer"
                       />
-                      <span className="font-medium">{member.name}</span>
+                      <span className="font-medium text-zinc-200 truncate">{member.name}</span>
                       {member.userId === currentUserId && (
-                        <span className="text-xs text-emerald-400">(You)</span>
+                        <span className="text-[10px] text-zinc-500">(You)</span>
                       )}
                     </label>
 
-                    {splitType === "exact" &&
-                      selectedMembers.includes(member.userId) && (
-                        <Input
-                          type="number"
-                          placeholder="₹"
-                          value={exactAmounts[member.userId] || ""}
-                          onChange={(e) =>
-                            setExactAmounts((prev) => ({
-                              ...prev,
-                              [member.userId]: e.target.value,
-                            }))
-                          }
-                          className="w-24 bg-[#12121a] border-zinc-700 rounded-lg text-right"
-                        />
-                      )}
+                    {splitType === "exact" && selectedMembers.includes(member.userId) && (
+                      <Input
+                        type="number"
+                        placeholder="₹"
+                        value={exactAmounts[member.userId] || ""}
+                        onChange={(e) =>
+                          setExactAmounts((prev) => ({
+                            ...prev,
+                            [member.userId]: e.target.value,
+                          }))
+                        }
+                        className="w-20 bg-zinc-950 border-zinc-700 rounded-lg text-right h-8 text-xs text-white"
+                      />
+                    )}
                   </div>
                 ))}
               </div>
             </div>
 
-            <Button
-              className="w-full rounded-xl h-12 gradient-emerald hover:opacity-90 font-semibold text-white border-0"
+            <button
               onClick={handleCreateExpense}
               disabled={loading || !amount || selectedMembers.length === 0}
+              className="w-full py-3 rounded-xl bg-white hover:bg-zinc-200 text-zinc-950 font-bold text-sm transition-all disabled:opacity-50 cursor-pointer shadow-sm active:scale-98"
             >
-              {loading ? (
-                <span className="flex items-center gap-2">
-                  <span className="w-4 h-4 rounded-full border-2 border-white border-t-transparent animate-spin" />
-                  Adding...
-                </span>
-              ) : (
-                "Add Expense"
-              )}
-            </Button>
+              {loading ? "Adding Expense..." : "Add Expense"}
+            </button>
           </div>
         </DialogContent>
       </Dialog>
 
       {/* SETTLE-UP DIALOG */}
       <Dialog open={settleOpen} onOpenChange={setSettleOpen}>
-        <DialogContent className="bg-[#12121a] border-zinc-800/50 rounded-2xl shadow-2xl">
+        <DialogContent className="bg-zinc-950 border-zinc-800 rounded-2xl shadow-2xl max-w-sm sm:max-w-md w-[calc(100vw-2rem)] p-5 sm:p-6 text-white">
           <DialogHeader>
-            <DialogTitle className="text-xl font-bold flex items-center gap-2">
-              <span className="w-8 h-8 rounded-lg gradient-violet flex items-center justify-center text-sm">🤝</span>
-              Settle Up
+            <DialogTitle className="text-lg sm:text-xl font-bold flex items-center gap-2 text-white">
+              <span className="w-7 h-7 rounded-lg bg-zinc-800 border border-zinc-700 flex items-center justify-center text-xs">🤝</span>
+              Record Settlement
             </DialogTitle>
           </DialogHeader>
 
-          <div className="space-y-4 mt-2">
+          <div className="space-y-4 mt-3">
             <div>
-              <label className="text-xs text-zinc-500 mb-1.5 block">Pay To</label>
+              <label className="text-xs font-medium text-zinc-400 mb-1.5 block">Pay To</label>
               <select
-                className="w-full h-12 rounded-xl bg-[#1e1e2e] border border-zinc-800 px-4 text-sm focus:border-violet-500/50 focus:outline-none appearance-none cursor-pointer"
+                className="w-full h-11 rounded-xl bg-zinc-900 border border-zinc-800 px-3 text-sm text-white focus:border-zinc-600 focus:outline-none cursor-pointer"
                 value={settleToUserId}
                 onChange={(e) => setSettleToUserId(e.target.value)}
               >
@@ -578,9 +555,9 @@ export default function GroupClient({
             </div>
 
             <div>
-              <label className="text-xs text-zinc-500 mb-1.5 block">Amount (₹)</label>
+              <label className="text-xs font-medium text-zinc-400 mb-1.5 block">Amount (₹)</label>
               <Input
-                className="bg-[#1e1e2e] border-zinc-800 rounded-xl h-12 text-lg focus:border-violet-500/50"
+                className="bg-zinc-900 border-zinc-800 text-white rounded-xl h-11 text-base placeholder:text-zinc-600 focus:border-zinc-600"
                 placeholder="0.00"
                 type="number"
                 value={settleAmount}
@@ -589,29 +566,22 @@ export default function GroupClient({
             </div>
 
             <div>
-              <label className="text-xs text-zinc-500 mb-1.5 block">Note (optional)</label>
+              <label className="text-xs font-medium text-zinc-400 mb-1.5 block">Note (optional)</label>
               <Input
-                className="bg-[#1e1e2e] border-zinc-800 rounded-xl h-12 focus:border-violet-500/50"
+                className="bg-zinc-900 border-zinc-800 text-white rounded-xl h-11 text-base placeholder:text-zinc-600 focus:border-zinc-600"
                 placeholder="e.g. UPI payment, Cash"
                 value={settleNote}
                 onChange={(e) => setSettleNote(e.target.value)}
               />
             </div>
 
-            <Button
-              className="w-full rounded-xl h-12 gradient-violet hover:opacity-90 font-semibold text-white border-0"
+            <button
               onClick={handleSettleUp}
               disabled={loading || !settleToUserId || !settleAmount}
+              className="w-full py-3 rounded-xl bg-white hover:bg-zinc-200 text-zinc-950 font-bold text-sm transition-all disabled:opacity-50 cursor-pointer shadow-sm active:scale-98"
             >
-              {loading ? (
-                <span className="flex items-center gap-2">
-                  <span className="w-4 h-4 rounded-full border-2 border-white border-t-transparent animate-spin" />
-                  Recording...
-                </span>
-              ) : (
-                "Record Settlement"
-              )}
-            </Button>
+              {loading ? "Recording..." : "Confirm Settlement"}
+            </button>
           </div>
         </DialogContent>
       </Dialog>

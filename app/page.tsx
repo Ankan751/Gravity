@@ -1,31 +1,33 @@
 import Link from "next/link";
+import { ArrowRight, Receipt, Users, CheckCircle2, ShieldCheck, Zap } from "lucide-react";
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-[#0a0a0f] text-white overflow-hidden">
-      {/* ─── Background Effects ─── */}
-      <div className="fixed inset-0 bg-grid opacity-40 pointer-events-none" />
-      <div className="fixed top-[-200px] left-[-200px] w-[600px] h-[600px] rounded-full bg-emerald-500/10 blur-[160px] animate-pulse-glow pointer-events-none" />
-      <div className="fixed bottom-[-200px] right-[-200px] w-[600px] h-[600px] rounded-full bg-violet-500/10 blur-[160px] animate-pulse-glow pointer-events-none" style={{ animationDelay: "2s" }} />
+    <div className="min-h-screen bg-[#09090b] text-[#fafafa] overflow-hidden selection:bg-zinc-800 selection:text-white">
+      {/* ─── Background Ambient Effects ─── */}
+      <div className="fixed inset-0 bg-grid opacity-35 pointer-events-none" />
+      <div className="fixed top-[-250px] left-1/2 -translate-x-1/2 w-[700px] h-[500px] rounded-full bg-zinc-800/25 blur-[160px] pointer-events-none" />
 
       {/* ─── Navbar ─── */}
-      <nav className="relative z-10 flex items-center justify-between max-w-6xl mx-auto px-6 py-5">
-        <div className="flex items-center gap-2">
-          <div className="w-9 h-9 rounded-xl gradient-emerald flex items-center justify-center font-bold text-lg text-white">
+      <nav className="relative z-10 flex items-center justify-between max-w-6xl mx-auto px-4 sm:px-6 py-5">
+        <div className="flex items-center gap-2.5">
+          <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-zinc-700 to-zinc-900 border border-zinc-700/60 flex items-center justify-center font-bold text-base text-white shadow-sm">
             S
           </div>
-          <span className="text-xl font-bold tracking-tight">Split<span className="text-emerald-400">Ease</span></span>
+          <span className="text-xl font-bold tracking-tight text-white">
+            Split<span className="text-zinc-400">Ease</span>
+          </span>
         </div>
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-3 sm:gap-4">
           <Link
             href="/api/auth/signin"
-            className="text-sm text-zinc-400 hover:text-white transition font-medium"
+            className="text-sm text-zinc-400 hover:text-white transition font-medium px-2 py-1"
           >
             Sign In
           </Link>
           <Link
             href="/api/auth/signin"
-            className="px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-sm font-semibold transition-all hover:shadow-lg hover:shadow-emerald-500/25"
+            className="px-4 py-2 sm:px-5 sm:py-2.5 rounded-xl bg-white hover:bg-zinc-200 text-zinc-950 text-sm font-semibold transition-all shadow-sm active:scale-95"
           >
             Get Started
           </Link>
@@ -33,188 +35,147 @@ export default function Home() {
       </nav>
 
       {/* ─── Hero Section ─── */}
-      <section className="relative z-10 max-w-6xl mx-auto px-6 pt-20 pb-32">
-        <div className="max-w-3xl mx-auto text-center space-y-8">
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-sm font-medium">
-            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-            Free & Open Source
+      <section className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 pt-16 sm:pt-24 pb-24 sm:pb-32 text-center">
+        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-zinc-900/90 border border-zinc-800 text-zinc-300 text-xs sm:text-sm font-medium mb-8">
+          <span className="w-1.5 h-1.5 rounded-full bg-zinc-400 animate-pulse" />
+          Zero Hassle Expense Sharing
+        </div>
+
+        <h1 className="text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight leading-[1.15] text-white">
+          Split Bills{" "}
+          <span className="bg-gradient-to-r from-white via-zinc-200 to-zinc-400 bg-clip-text text-transparent">
+            Effortlessly
+          </span>
+          <br className="hidden sm:inline" />
+          {" "}With Anyone.
+        </h1>
+
+        <p className="text-base sm:text-xl text-zinc-400 max-w-xl mx-auto mt-6 leading-relaxed">
+          Track shared expenses, balance group debts fairly, and settle up in seconds.
+          Designed cleanly for real-world groups.
+        </p>
+
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 mt-8 max-w-md mx-auto sm:max-w-none">
+          <Link
+            href="/api/auth/signin"
+            className="w-full sm:w-auto px-8 py-3.5 sm:py-4 rounded-xl bg-white hover:bg-zinc-200 text-zinc-950 font-bold text-base transition-all shadow-lg active:scale-95 flex items-center justify-center gap-2"
+          >
+            Start Splitting
+            <ArrowRight className="w-4 h-4" />
+          </Link>
+          <Link
+            href="#features"
+            className="w-full sm:w-auto px-8 py-3.5 sm:py-4 rounded-xl border border-zinc-800 hover:border-zinc-700 bg-zinc-900/60 text-zinc-300 hover:text-white font-medium text-base transition-all"
+          >
+            Learn More
+          </Link>
+        </div>
+
+        {/* ─── Stats Bar ─── */}
+        <div className="grid grid-cols-3 gap-3 sm:gap-6 pt-12 sm:pt-16 max-w-lg mx-auto">
+          <div className="glass-card rounded-xl p-3.5 sm:p-4 text-center">
+            <div className="text-xl sm:text-2xl font-bold text-white">100%</div>
+            <div className="text-[11px] sm:text-xs text-zinc-400 mt-0.5">Free Forever</div>
           </div>
-
-          <h1 className="text-5xl sm:text-6xl lg:text-7xl font-extrabold leading-[1.1] tracking-tight">
-            Split Bills{" "}
-            <span className="text-gradient-emerald">Effortlessly</span>
-            <br />
-            With <span className="text-gradient-violet">Friends</span>
-          </h1>
-
-          <p className="text-lg sm:text-xl text-zinc-400 max-w-xl mx-auto leading-relaxed">
-            Track shared expenses, split bills fairly, and settle up instantly.
-            No more awkward money conversations — SplitEase handles it all.
-          </p>
-
-          <div className="flex items-center justify-center gap-4 pt-4">
-            <Link
-              href="/api/auth/signin"
-              className="px-8 py-4 rounded-2xl gradient-emerald text-white font-bold text-lg transition-all hover:shadow-2xl hover:shadow-emerald-500/30 hover:scale-105"
-            >
-              Start Splitting →
-            </Link>
-            <Link
-              href="#features"
-              className="px-8 py-4 rounded-2xl border border-zinc-800 hover:border-zinc-600 text-zinc-300 hover:text-white font-semibold text-lg transition-all"
-            >
-              Learn More
-            </Link>
+          <div className="glass-card rounded-xl p-3.5 sm:p-4 text-center">
+            <div className="text-xl sm:text-2xl font-bold text-white">Instant</div>
+            <div className="text-[11px] sm:text-xs text-zinc-400 mt-0.5">Calculations</div>
           </div>
-
-          {/* ─── Stats Bar ─── */}
-          <div className="grid grid-cols-3 gap-6 pt-12 max-w-md mx-auto">
-            <div className="text-center">
-              <div className="text-2xl font-bold text-gradient-emerald">100%</div>
-              <div className="text-xs text-zinc-500 mt-1">Free Forever</div>
-            </div>
-            <div className="text-center">
-              <div className="text-2xl font-bold text-gradient-violet">∞</div>
-              <div className="text-xs text-zinc-500 mt-1">Unlimited Groups</div>
-            </div>
-            <div className="text-center">
-              <div className="text-2xl font-bold text-gradient-emerald">₹</div>
-              <div className="text-xs text-zinc-500 mt-1">INR Supported</div>
-            </div>
+          <div className="glass-card rounded-xl p-3.5 sm:p-4 text-center">
+            <div className="text-xl sm:text-2xl font-bold text-white">₹ / $</div>
+            <div className="text-[11px] sm:text-xs text-zinc-400 mt-0.5">Multi-Split</div>
           </div>
         </div>
       </section>
 
       {/* ─── Features Section ─── */}
-      <section id="features" className="relative z-10 max-w-6xl mx-auto px-6 py-24">
-        <div className="text-center mb-16">
-          <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">
-            Everything You Need to{" "}
-            <span className="text-gradient-emerald">Split Smart</span>
+      <section id="features" className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 py-16 sm:py-24 border-t border-zinc-800/60">
+        <div className="text-center mb-12 sm:mb-16">
+          <h2 className="text-2xl sm:text-4xl font-bold tracking-tight text-white">
+            Everything You Need To Split Smart
           </h2>
-          <p className="text-zinc-400 mt-4 max-w-lg mx-auto">
-            Powerful features designed to make expense sharing seamless and stress-free.
+          <p className="text-zinc-400 mt-3 text-sm sm:text-base max-w-md mx-auto">
+            Engineered to remove awkward debt math from group trips, rooming, and dining.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
           {/* Feature 1 */}
-          <div className="glass-card rounded-2xl p-8 group hover:border-emerald-500/30 transition-all duration-300 hover:glow-emerald">
-            <div className="w-14 h-14 rounded-2xl gradient-emerald flex items-center justify-center text-2xl mb-6 group-hover:scale-110 transition-transform">
-              💰
+          <div className="glass-card rounded-2xl p-6 sm:p-8 hover:border-zinc-700/80 transition-all duration-300">
+            <div className="w-12 h-12 rounded-xl bg-zinc-900 border border-zinc-800 flex items-center justify-center text-zinc-200 mb-5">
+              <Receipt className="w-5 h-5" />
             </div>
-            <h3 className="text-xl font-bold mb-3">Split Any Way</h3>
-            <p className="text-zinc-400 leading-relaxed">
-              Split bills equally or enter exact amounts for each person.
-              Flexible splitting that works for any situation.
+            <h3 className="text-lg font-bold text-white mb-2">Equal & Exact Splits</h3>
+            <p className="text-zinc-400 text-sm leading-relaxed">
+              Split checks evenly across all members or assign exact rupee amounts per participant with precision.
             </p>
           </div>
 
           {/* Feature 2 */}
-          <div className="glass-card rounded-2xl p-8 group hover:border-violet-500/30 transition-all duration-300 hover:glow-violet">
-            <div className="w-14 h-14 rounded-2xl gradient-violet flex items-center justify-center text-2xl mb-6 group-hover:scale-110 transition-transform">
-              📊
+          <div className="glass-card rounded-2xl p-6 sm:p-8 hover:border-zinc-700/80 transition-all duration-300">
+            <div className="w-12 h-12 rounded-xl bg-zinc-900 border border-zinc-800 flex items-center justify-center text-zinc-200 mb-5">
+              <Users className="w-5 h-5" />
             </div>
-            <h3 className="text-xl font-bold mb-3">Live Balances</h3>
-            <p className="text-zinc-400 leading-relaxed">
-              See who owes what in real-time. Our smart ledger system keeps
-              track of every rupee across all your groups.
+            <h3 className="text-lg font-bold text-white mb-2">Live Group Balances</h3>
+            <p className="text-zinc-400 text-sm leading-relaxed">
+              Real-time ledger updates keep balances synchronized across all phones instantly with zero refresh delays.
             </p>
           </div>
 
           {/* Feature 3 */}
-          <div className="glass-card rounded-2xl p-8 group hover:border-emerald-500/30 transition-all duration-300 hover:glow-emerald">
-            <div className="w-14 h-14 rounded-2xl gradient-emerald flex items-center justify-center text-2xl mb-6 group-hover:scale-110 transition-transform">
-              🤝
+          <div className="glass-card rounded-2xl p-6 sm:p-8 hover:border-zinc-700/80 transition-all duration-300">
+            <div className="w-12 h-12 rounded-xl bg-zinc-900 border border-zinc-800 flex items-center justify-center text-zinc-200 mb-5">
+              <Zap className="w-5 h-5" />
             </div>
-            <h3 className="text-xl font-bold mb-3">Settle Up</h3>
-            <p className="text-zinc-400 leading-relaxed">
-              One-click settlements with smart debt simplification.
-              Minimize the number of payments needed in your group.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* ─── How It Works ─── */}
-      <section className="relative z-10 max-w-6xl mx-auto px-6 py-24">
-        <div className="text-center mb-16">
-          <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">
-            Get Started in{" "}
-            <span className="text-gradient-violet">3 Simple Steps</span>
-          </h2>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          <div className="relative text-center space-y-4">
-            <div className="w-16 h-16 mx-auto rounded-full bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-2xl font-bold text-emerald-400">
-              1
-            </div>
-            <h3 className="text-xl font-bold">Create a Group</h3>
-            <p className="text-zinc-400">
-              Sign in with Google and create a group for your trip, apartment, dinner, or any shared expense.
-            </p>
-          </div>
-
-          <div className="relative text-center space-y-4">
-            <div className="w-16 h-16 mx-auto rounded-full bg-violet-500/10 border border-violet-500/20 flex items-center justify-center text-2xl font-bold text-violet-400">
-              2
-            </div>
-            <h3 className="text-xl font-bold">Add Expenses</h3>
-            <p className="text-zinc-400">
-              Log expenses as they happen. Choose equal or exact splits — SplitEase calculates who owes what.
-            </p>
-          </div>
-
-          <div className="relative text-center space-y-4">
-            <div className="w-16 h-16 mx-auto rounded-full bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-2xl font-bold text-emerald-400">
-              3
-            </div>
-            <h3 className="text-xl font-bold">Settle Up</h3>
-            <p className="text-zinc-400">
-              See simplified debts and settle up with one click. No more spreadsheets or mental math.
+            <h3 className="text-lg font-bold text-white mb-2">Simplified Settlements</h3>
+            <p className="text-zinc-400 text-sm leading-relaxed">
+              Smart debt simplification computes the minimum number of payments required to clear everyone&apos;s balances.
             </p>
           </div>
         </div>
       </section>
 
       {/* ─── CTA Section ─── */}
-      <section className="relative z-10 max-w-6xl mx-auto px-6 py-24">
-        <div className="glass-card rounded-3xl p-12 sm:p-16 text-center relative overflow-hidden">
-          <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-emerald-500/5 to-violet-500/5 pointer-events-none" />
-          <div className="relative z-10 space-y-6">
-            <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">
-              Ready to Split <span className="text-gradient-emerald">Smarter</span>?
-            </h2>
-            <p className="text-zinc-400 max-w-md mx-auto">
-              Join thousands of people who use SplitEase to manage their shared expenses.
-              It&apos;s free, fast, and fair.
-            </p>
+      <section className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 py-16 sm:py-20">
+        <div className="glass-card rounded-3xl p-8 sm:p-14 text-center border border-zinc-800">
+          <h2 className="text-2xl sm:text-4xl font-bold tracking-tight text-white">
+            Ready to simplify group expenses?
+          </h2>
+          <p className="text-zinc-400 text-sm sm:text-base max-w-md mx-auto mt-3">
+            Open in browser or install directly on your phone as a Progressive Web App.
+          </p>
+          <div className="mt-8">
             <Link
               href="/api/auth/signin"
-              className="inline-block px-10 py-4 rounded-2xl gradient-emerald text-white font-bold text-lg transition-all hover:shadow-2xl hover:shadow-emerald-500/30 hover:scale-105"
+              className="inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-xl bg-white hover:bg-zinc-200 text-zinc-950 font-bold text-base transition-all shadow-md active:scale-95"
             >
-              Get Started Free →
+              Get Started Now
+              <ArrowRight className="w-4 h-4" />
             </Link>
           </div>
         </div>
       </section>
 
       {/* ─── Footer ─── */}
-      <footer className="relative z-10 border-t border-zinc-800/50 py-12">
-        <div className="max-w-6xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <footer className="relative z-10 border-t border-zinc-800/80 py-8 sm:py-10">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left">
           <div className="flex items-center gap-2">
-            <div className="w-7 h-7 rounded-lg gradient-emerald flex items-center justify-center font-bold text-sm text-white">
+            <div className="w-6 h-6 rounded-lg bg-zinc-800 border border-zinc-700 flex items-center justify-center font-bold text-xs text-white">
               S
             </div>
-            <span className="font-bold">Split<span className="text-emerald-400">Ease</span></span>
+            <span className="font-semibold text-sm text-zinc-200">SplitEase</span>
           </div>
-          <p className="text-sm text-zinc-500">
-            © {new Date().getFullYear()} SplitEase. Built with Next.js & MongoDB.
+          <p className="text-xs text-zinc-500">
+            © {new Date().getFullYear()} SplitEase. All rights reserved.
           </p>
-          <div className="flex gap-6">
-            <a href="https://github.com/AryanSri-235/SPLITWISE" target="_blank" rel="noopener noreferrer" className="text-sm text-zinc-500 hover:text-emerald-400 transition">
-              GitHub
+          <div>
+            <a
+              href="https://github.com/Ankan751/Gravity"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-xs text-zinc-400 hover:text-white transition"
+            >
+              GitHub Repository
             </a>
           </div>
         </div>

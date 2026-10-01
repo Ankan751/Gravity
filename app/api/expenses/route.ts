@@ -4,8 +4,9 @@ import Expense from "@/models/Expense";
 import ExpenseSplit from "@/models/ExpenseSplit";
 import LedgerEntry from "@/models/LedgerEntry";
 import GroupMember from "@/models/GroupMember";
-import User from "@/models/User";
 import mongoose, { Types } from "mongoose";
+import { revalidatePath } from "next/cache";
+import { invalidateCache } from "@/lib/cache";
 
 /**
  * POST /api/expenses
@@ -153,6 +154,11 @@ export async function POST(request: Request) {
 
     await dbSession.commitTransaction();
     dbSession.endSession();
+
+    // Invalidate cached group history and revalidate pages
+    invalidateCache(`group-history-${groupId}`);
+    revalidatePath(`/group/${groupId}`);
+    revalidatePath("/dashboard");
 
     return Response.json({ success: true });
   } catch (error) {

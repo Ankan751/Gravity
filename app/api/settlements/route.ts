@@ -3,8 +3,9 @@ import { connectToDatabase } from "@/lib/db";
 import Settlement from "@/models/Settlement";
 import LedgerEntry from "@/models/LedgerEntry";
 import GroupMember from "@/models/GroupMember";
-import User from "@/models/User";
 import mongoose, { Types } from "mongoose";
+import { revalidatePath } from "next/cache";
+import { invalidateCache } from "@/lib/cache";
 
 /**
  * POST /api/settlements
@@ -119,6 +120,11 @@ export async function POST(request: Request) {
 
         await dbSession.commitTransaction();
         dbSession.endSession();
+
+        // Invalidate cached group history and revalidate pages
+        invalidateCache(`group-history-${groupId}`);
+        revalidatePath(`/group/${groupId}`);
+        revalidatePath("/dashboard");
 
         return Response.json({ success: true, settlementId: settlement._id.toString() });
     } catch (error) {

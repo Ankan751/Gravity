@@ -71,7 +71,7 @@ export default function PwaRegister() {
   return (
     <div className="fixed bottom-5 right-5 z-50 max-w-sm w-[calc(100vw-2.5rem)] sm:w-auto animate-in fade-in slide-in-from-bottom-5 duration-300">
       <div className="bg-zinc-950/95 backdrop-blur-xl border border-zinc-800 p-4 rounded-2xl shadow-2xl flex items-center gap-3">
-        <div className="w-10 h-10 rounded-xl gradient-emerald flex items-center justify-center font-bold text-white shrink-0 shadow-md shadow-emerald-500/20">
+        <div className="w-10 h-10 rounded-xl bg-zinc-800 border border-zinc-700 flex items-center justify-center font-bold text-white shrink-0 shadow-sm">
           S
         </div>
         <div className="flex-1 min-w-0 pr-1">
@@ -81,7 +81,7 @@ export default function PwaRegister() {
         <div className="flex items-center gap-1.5 shrink-0">
           <button
             onClick={handleInstallClick}
-            className="flex items-center gap-1.5 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold px-3 py-1.5 rounded-lg transition-colors cursor-pointer shadow-sm hover:shadow-emerald-500/20"
+            className="flex items-center gap-1.5 bg-white hover:bg-zinc-200 text-zinc-950 text-xs font-semibold px-3 py-1.5 rounded-lg transition-colors cursor-pointer shadow-sm active:scale-95"
           >
             <Download className="w-3.5 h-3.5" />
             Install

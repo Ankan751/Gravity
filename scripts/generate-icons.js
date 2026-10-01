@@ -103,24 +103,17 @@ function getSplitEasePixel(x, y, w, h) {
   // Antialiased box edge
   const boxAlpha = Math.max(0, Math.min(1, (0.02 - boxDist) / 0.02));
   
-  // Emerald gradient
+  // Sleek obsidian / charcoal gradient
   const t = (nx + ny + 2) / 4; // 0 to 1 diagonal gradient
-  // Top-left: #059669 (5, 150, 105), Bottom-right: #10b981 (16, 185, 129)
-  let bgR = 5 + t * (16 - 5);
-  let bgG = 150 + t * (185 - 150);
-  let bgB = 105 + t * (129 - 105);
+  // Top-left: #3f3f46 (63, 63, 70), Bottom-right: #18181b (24, 24, 27)
+  let bgR = 63 - t * (63 - 24);
+  let bgG = 63 - t * (63 - 24);
+  let bgB = 70 - t * (70 - 27);
 
   // Modern stylised "S" shape
-  // Let's create an elegant "S" made of two connected semicircles and straight bars
-  // Upper loop center: (0, -0.22), radius: 0.24, stroke thickness: 0.13
-  // Lower loop center: (0, 0.22), radius: 0.24, stroke thickness: 0.13
   const upperArcDist = distToArc(nx, ny, 0, -0.22, 0.24, -Math.PI * 0.95, Math.PI * 0.5);
   const lowerArcDist = distToArc(nx, ny, 0, 0.22, 0.24, Math.PI * 0.05, Math.PI * 1.5);
   
-  // Connecting stroke & end caps
-  const capTop = Math.hypot(nx - (-0.24), ny - (-0.22));
-  const capBottom = Math.hypot(nx - (0.24), ny - (0.22));
-
   const strokeDist = Math.min(upperArcDist, lowerArcDist);
   const sThickness = 0.085;
   const sDist = strokeDist - sThickness;
@@ -129,7 +122,6 @@ function getSplitEasePixel(x, y, w, h) {
 
   if (sDist < 0.02) {
     const sAlpha = Math.max(0, Math.min(1, (0.01 - sDist) / 0.02));
-    // Crisp white for "S" with subtle glow
     r = r * (1 - sAlpha) + 255 * sAlpha;
     g = g * (1 - sAlpha) + 255 * sAlpha;
     b = b * (1 - sAlpha) + 255 * sAlpha;
@@ -162,16 +154,13 @@ fs.writeFileSync(path.join(iconsDir, 'apple-touch-icon.png'), png180);
 console.log('Generating icon.svg...');
 const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
   <defs>
-    <linearGradient id="emeraldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#059669"/>
-      <stop offset="100%" stop-color="#10b981"/>
+    <linearGradient id="monochromeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#27272a"/>
+      <stop offset="100%" stop-color="#121215"/>
     </linearGradient>
-    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
-      <feDropShadow dx="0" dy="12" stdDeviation="16" flood-color="#059669" flood-opacity="0.35"/>
-    </filter>
   </defs>
-  <rect width="512" height="512" rx="120" fill="#0a0a0f"/>
-  <rect x="36" y="36" width="440" height="440" rx="96" fill="url(#emeraldGrad)" filter="url(#shadow)"/>
+  <rect width="512" height="512" rx="120" fill="#09090b"/>
+  <rect x="36" y="36" width="440" height="440" rx="96" fill="url(#monochromeGrad)" stroke="rgba(255,255,255,0.12)" stroke-width="4"/>
   <path d="M 330 160 C 330 160 300 130 256 130 C 200 130 160 170 160 216 C 160 270 210 286 256 300 C 310 316 352 334 352 390 C 352 446 304 482 256 482 C 196 482 160 440 160 440" 
         fill="none" stroke="#ffffff" stroke-width="48" stroke-linecap="round" stroke-linejoin="round" transform="translate(0, -50)"/>
 </svg>`;

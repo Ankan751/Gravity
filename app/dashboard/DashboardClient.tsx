@@ -2,8 +2,6 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import {
   Dialog,
@@ -11,6 +9,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { Plus, Link2, Copy, Check, ChevronRight, LogOut, Users, Zap, Coins } from "lucide-react";
 
 type User = {
   name?: string | null;
@@ -37,6 +36,7 @@ export default function DashboardClient({ user, groups }: DashboardProps) {
   const [joinLink, setJoinLink] = useState("");
   const [notification, setNotification] = useState("");
   const [loading, setLoading] = useState(false);
+  const [copied, setCopied] = useState(false);
 
   const confirmGroupCreation = async () => {
     if (!groupName.trim()) return;
@@ -55,6 +55,7 @@ export default function DashboardClient({ user, groups }: DashboardProps) {
       setJoinLink(data.joinLink);
       setNotification("Group created successfully 🎉");
       setTimeout(() => setNotification(""), 4000);
+      router.refresh();
     } catch {
       setNotification("Failed to create group");
       setTimeout(() => setNotification(""), 3000);
@@ -65,8 +66,12 @@ export default function DashboardClient({ user, groups }: DashboardProps) {
 
   const copyLink = async () => {
     await navigator.clipboard.writeText(joinLink);
+    setCopied(true);
     setNotification("Invite link copied!");
-    setTimeout(() => setNotification(""), 2000);
+    setTimeout(() => {
+      setNotification("");
+      setCopied(false);
+    }, 2000);
   };
 
   const joinGroup = async () => {
@@ -99,94 +104,103 @@ export default function DashboardClient({ user, groups }: DashboardProps) {
 
   if (!user) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[#0a0a0f]">
+      <div className="min-h-screen flex items-center justify-center bg-[#09090b]">
         <div className="flex items-center gap-3">
-          <div className="w-5 h-5 rounded-full border-2 border-emerald-500 border-t-transparent animate-spin" />
-          <p className="text-zinc-400">Loading your dashboard...</p>
+          <div className="w-5 h-5 rounded-full border-2 border-zinc-400 border-t-transparent animate-spin" />
+          <p className="text-zinc-400 text-sm">Loading your dashboard...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-[#0a0a0f] text-white overflow-hidden">
-      {/* Background effects */}
+    <div className="min-h-screen bg-[#09090b] text-[#fafafa] selection:bg-zinc-800 selection:text-white">
+      {/* Background ambient lighting */}
       <div className="fixed inset-0 bg-grid opacity-30 pointer-events-none" />
-      <div className="fixed top-[-300px] right-[-200px] w-[500px] h-[500px] rounded-full bg-emerald-500/8 blur-[140px] pointer-events-none" />
-      <div className="fixed bottom-[-200px] left-[-200px] w-[500px] h-[500px] rounded-full bg-violet-500/8 blur-[140px] pointer-events-none" />
+      <div className="fixed top-[-250px] right-[-100px] w-[500px] h-[500px] rounded-full bg-zinc-800/20 blur-[150px] pointer-events-none" />
 
-      <div className="relative z-10 max-w-4xl mx-auto px-6 py-8 space-y-8">
+      <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 py-6 sm:py-8 space-y-6 sm:space-y-8">
         {/* Notification Toast */}
         {notification && (
-          <div className="fixed top-6 right-6 z-50 px-5 py-3 rounded-xl bg-emerald-600/90 backdrop-blur-md shadow-2xl shadow-emerald-500/20 text-sm font-medium animate-in fade-in slide-in-from-top-2 duration-300">
+          <div className="fixed top-5 right-5 z-50 px-4 py-2.5 rounded-xl bg-zinc-900 border border-zinc-700 shadow-2xl text-xs sm:text-sm font-medium text-white animate-in fade-in slide-in-from-top-2 duration-300">
             {notification}
           </div>
         )}
 
         {/* Navbar */}
         <div className="flex items-center justify-between pb-2">
-          <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl gradient-emerald flex items-center justify-center font-bold text-lg text-white">
+          <div className="flex items-center gap-2.5">
+            <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-gradient-to-br from-zinc-700 to-zinc-900 border border-zinc-700/60 flex items-center justify-center font-bold text-sm sm:text-base text-white shadow-sm">
               S
             </div>
-            <span className="text-xl font-bold tracking-tight">
-              Split<span className="text-emerald-400">Ease</span>
+            <span className="text-lg sm:text-xl font-bold tracking-tight text-white">
+              Split<span className="text-zinc-400">Ease</span>
             </span>
           </div>
           <button
             onClick={handleSignOut}
-            className="px-4 py-2 rounded-xl text-sm text-zinc-400 hover:text-white border border-zinc-800 hover:border-zinc-600 transition-all"
+            className="flex items-center gap-1.5 px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl text-xs sm:text-sm text-zinc-400 hover:text-white border border-zinc-800 hover:border-zinc-700 bg-zinc-900/60 transition-all cursor-pointer"
           >
+            <LogOut className="w-3.5 h-3.5" />
             Sign Out
           </button>
         </div>
 
         {/* Welcome Card */}
-        <div className="glass-card rounded-2xl p-8 glow-emerald">
-          <div className="flex items-center gap-5">
-            <div className="w-16 h-16 rounded-2xl gradient-emerald flex items-center justify-center text-3xl font-bold text-white shrink-0">
+        <div className="glass-card rounded-2xl p-5 sm:p-7 border border-zinc-800">
+          <div className="flex items-center gap-4 sm:gap-5">
+            <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-zinc-800 border border-zinc-700/80 flex items-center justify-center text-xl sm:text-2xl font-bold text-white shrink-0">
               {user.name?.charAt(0)?.toUpperCase() || "U"}
             </div>
-            <div>
-              <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">
-                Welcome back, {user.name ?? "User"} 👋
+            <div className="min-w-0 flex-1">
+              <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-white truncate">
+                Welcome, {user.name ?? "User"}
               </h1>
-              <p className="text-zinc-400 text-sm mt-1">{user.email}</p>
+              <p className="text-zinc-400 text-xs sm:text-sm mt-0.5 truncate">{user.email}</p>
             </div>
           </div>
         </div>
 
         {/* Stats Row */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-          <div className="glass-card rounded-2xl p-5 text-center">
-            <div className="text-3xl font-bold text-gradient-emerald">{groups.length}</div>
-            <div className="text-xs text-zinc-500 mt-1">Active Groups</div>
+        <div className="grid grid-cols-3 gap-2.5 sm:gap-4">
+          <div className="glass-card rounded-xl sm:rounded-2xl p-3.5 sm:p-5 text-center border border-zinc-800/80">
+            <div className="text-xl sm:text-2xl font-bold text-white">{groups.length}</div>
+            <div className="text-[11px] sm:text-xs text-zinc-400 mt-0.5 flex items-center justify-center gap-1">
+              <Users className="w-3 h-3 hidden sm:inline" />
+              Groups
+            </div>
           </div>
-          <div className="glass-card rounded-2xl p-5 text-center">
-            <div className="text-3xl font-bold text-gradient-violet">∞</div>
-            <div className="text-xs text-zinc-500 mt-1">Unlimited Splits</div>
+          <div className="glass-card rounded-xl sm:rounded-2xl p-3.5 sm:p-5 text-center border border-zinc-800/80">
+            <div className="text-xl sm:text-2xl font-bold text-white">Instant</div>
+            <div className="text-[11px] sm:text-xs text-zinc-400 mt-0.5 flex items-center justify-center gap-1">
+              <Zap className="w-3 h-3 hidden sm:inline" />
+              Sync
+            </div>
           </div>
-          <div className="hidden sm:block glass-card rounded-2xl p-5 text-center">
-            <div className="text-3xl font-bold text-emerald-400">₹</div>
-            <div className="text-xs text-zinc-500 mt-1">Currency</div>
+          <div className="glass-card rounded-xl sm:rounded-2xl p-3.5 sm:p-5 text-center border border-zinc-800/80">
+            <div className="text-xl sm:text-2xl font-bold text-white">INR (₹)</div>
+            <div className="text-[11px] sm:text-xs text-zinc-400 mt-0.5 flex items-center justify-center gap-1">
+              <Coins className="w-3 h-3 hidden sm:inline" />
+              Currency
+            </div>
           </div>
         </div>
 
         {/* Action Buttons */}
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-2 gap-3 sm:gap-4">
           <button
             onClick={() => {
               setCreateOpen(true);
               setGroupName("");
               setJoinLink("");
             }}
-            className="glass-card rounded-2xl p-6 text-center group hover:border-emerald-500/30 transition-all duration-300 cursor-pointer"
+            className="glass-card rounded-2xl p-4 sm:p-6 text-center hover:border-zinc-700 transition-all duration-200 cursor-pointer active:scale-98 group"
           >
-            <div className="w-12 h-12 mx-auto rounded-2xl gradient-emerald flex items-center justify-center text-xl mb-3 group-hover:scale-110 transition-transform">
-              ＋
+            <div className="w-10 h-10 sm:w-12 sm:h-12 mx-auto rounded-xl bg-white text-zinc-950 flex items-center justify-center mb-2.5 sm:mb-3 group-hover:scale-105 transition-transform shadow-md">
+              <Plus className="w-5 h-5 sm:w-6 sm:h-6 stroke-[2.5]" />
             </div>
-            <div className="font-bold text-lg">Create Group</div>
-            <p className="text-xs text-zinc-500 mt-1">Start a new expense group</p>
+            <div className="font-bold text-sm sm:text-base text-white">Create Group</div>
+            <p className="text-[11px] sm:text-xs text-zinc-400 mt-0.5">Start fresh expense pool</p>
           </button>
 
           <button
@@ -194,59 +208,54 @@ export default function DashboardClient({ user, groups }: DashboardProps) {
               setJoinOpen(true);
               setToken("");
             }}
-            className="glass-card rounded-2xl p-6 text-center group hover:border-violet-500/30 transition-all duration-300 cursor-pointer"
+            className="glass-card rounded-2xl p-4 sm:p-6 text-center hover:border-zinc-700 transition-all duration-200 cursor-pointer active:scale-98 group"
           >
-            <div className="w-12 h-12 mx-auto rounded-2xl gradient-violet flex items-center justify-center text-xl mb-3 group-hover:scale-110 transition-transform">
-              🔗
+            <div className="w-10 h-10 sm:w-12 sm:h-12 mx-auto rounded-xl bg-zinc-800 border border-zinc-700 text-white flex items-center justify-center mb-2.5 sm:mb-3 group-hover:scale-105 transition-transform shadow-sm">
+              <Link2 className="w-5 h-5 sm:w-6 sm:h-6 stroke-[2]" />
             </div>
-            <div className="font-bold text-lg">Join Group</div>
-            <p className="text-xs text-zinc-500 mt-1">Enter an invite token</p>
+            <div className="font-bold text-sm sm:text-base text-white">Join Group</div>
+            <p className="text-[11px] sm:text-xs text-zinc-400 mt-0.5">Enter an invite token</p>
           </button>
         </div>
 
         {/* Groups List */}
-        <div className="space-y-4">
-          <h2 className="text-xl font-bold tracking-tight flex items-center gap-2">
-            <span className="w-1 h-6 rounded-full bg-emerald-500" />
-            Your Groups
-          </h2>
+        <div className="space-y-3.5">
+          <div className="flex items-center justify-between">
+            <h2 className="text-lg sm:text-xl font-bold tracking-tight text-white flex items-center gap-2">
+              <span className="w-1.5 h-4 rounded-full bg-zinc-400" />
+              Your Groups
+            </h2>
+            <span className="text-xs text-zinc-500 font-medium">{groups.length} active</span>
+          </div>
 
           {groups.length === 0 ? (
-            <div className="glass-card rounded-2xl p-12 text-center">
-              <div className="text-5xl mb-4">🎯</div>
-              <h3 className="text-lg font-semibold mb-2">No groups yet</h3>
-              <p className="text-zinc-400 text-sm max-w-sm mx-auto">
-                Create your first group or join one using an invite token to get started.
+            <div className="glass-card rounded-2xl p-8 sm:p-12 text-center border border-zinc-800/80">
+              <div className="w-12 h-12 rounded-2xl bg-zinc-900 border border-zinc-800 flex items-center justify-center mx-auto mb-3 text-zinc-400">
+                <Users className="w-6 h-6" />
+              </div>
+              <h3 className="text-base font-semibold text-white mb-1">No groups yet</h3>
+              <p className="text-zinc-400 text-xs sm:text-sm max-w-xs mx-auto">
+                Create your first group or enter an invite token to start sharing bills.
               </p>
             </div>
           ) : (
-            <div className="grid gap-3">
-              {groups.map((group, index) => (
+            <div className="grid gap-2.5 sm:gap-3">
+              {groups.map((group) => (
                 <div
                   key={group._id}
                   onClick={() => router.push(`/group/${group._id}`)}
-                  className="glass-card rounded-2xl p-5 flex items-center gap-4 cursor-pointer hover:border-emerald-500/20 transition-all duration-300 group"
+                  className="glass-card rounded-xl sm:rounded-2xl p-3.5 sm:p-4 flex items-center gap-3.5 cursor-pointer hover:border-zinc-700 transition-all duration-200 active:scale-99 group border border-zinc-800/70"
                 >
-                  <div
-                    className={`w-12 h-12 rounded-xl flex items-center justify-center text-lg font-bold text-white shrink-0 ${index % 2 === 0 ? "gradient-emerald" : "gradient-violet"
-                      }`}
-                  >
+                  <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-zinc-800 border border-zinc-700/80 flex items-center justify-center text-sm sm:text-base font-bold text-white shrink-0 shadow-sm">
                     {group.name.charAt(0).toUpperCase()}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <div className="font-semibold text-lg truncate group-hover:text-emerald-400 transition-colors">
+                    <div className="font-semibold text-sm sm:text-base text-white truncate group-hover:text-zinc-200 transition-colors">
                       {group.name}
                     </div>
-                    <p className="text-xs text-zinc-500">Tap to view details</p>
+                    <p className="text-[11px] sm:text-xs text-zinc-500 mt-0.5">Tap to view expenses & settlements</p>
                   </div>
-                  <svg
-                    className="w-5 h-5 text-zinc-600 group-hover:text-emerald-400 transition-colors shrink-0"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                  </svg>
+                  <ChevronRight className="w-4 h-4 text-zinc-600 group-hover:text-zinc-300 transition-colors shrink-0" />
                 </div>
               ))}
             </div>
@@ -256,51 +265,48 @@ export default function DashboardClient({ user, groups }: DashboardProps) {
 
       {/* CREATE DIALOG */}
       <Dialog open={createOpen} onOpenChange={setCreateOpen}>
-        <DialogContent className="bg-[#12121a] border-zinc-800/50 rounded-2xl shadow-2xl">
+        <DialogContent className="bg-zinc-950 border-zinc-800 rounded-2xl shadow-2xl max-w-sm sm:max-w-md w-[calc(100vw-2rem)] p-5 sm:p-6 text-white">
           <DialogHeader>
-            <DialogTitle className="text-xl font-bold flex items-center gap-2">
-              <span className="w-8 h-8 rounded-lg gradient-emerald flex items-center justify-center text-sm">＋</span>
-              Create New Group
-            </DialogTitle>
+            <DialogTitle className="text-lg sm:text-xl font-bold text-white">Create a New Group</DialogTitle>
           </DialogHeader>
 
-          <div className="space-y-4 mt-2">
-            <Input
-              className="bg-[#1e1e2e] border-zinc-800 rounded-xl h-12 focus:border-emerald-500/50 focus:ring-emerald-500/20"
-              placeholder="e.g. Goa Trip, Apartment Bills"
-              value={groupName}
-              onChange={(e) => setGroupName(e.target.value)}
-              onKeyDown={(e) => e.key === "Enter" && confirmGroupCreation()}
-            />
+          <div className="space-y-4 pt-3">
+            <div>
+              <label className="text-xs font-medium text-zinc-400 block mb-1.5">Group Name</label>
+              <Input
+                placeholder="e.g. Goa Trip, Flat 402, Friday Dinner"
+                value={groupName}
+                onChange={(e) => setGroupName(e.target.value)}
+                className="bg-zinc-900 border-zinc-800 text-white rounded-xl h-11 text-base placeholder:text-zinc-600 focus:border-zinc-600"
+              />
+            </div>
 
-            <Button
-              className="w-full rounded-xl h-12 gradient-emerald hover:opacity-90 font-semibold text-white border-0"
+            <button
               onClick={confirmGroupCreation}
               disabled={loading || !groupName.trim()}
+              className="w-full py-3 rounded-xl bg-white hover:bg-zinc-200 text-zinc-950 font-semibold text-sm transition-all disabled:opacity-50 cursor-pointer shadow-sm active:scale-98"
             >
-              {loading ? (
-                <span className="flex items-center gap-2">
-                  <span className="w-4 h-4 rounded-full border-2 border-white border-t-transparent animate-spin" />
-                  Creating...
-                </span>
-              ) : (
-                "Create Group"
-              )}
-            </Button>
+              {loading ? "Creating..." : "Create Group"}
+            </button>
 
             {joinLink && (
-              <div className="space-y-3 pt-2">
-                <p className="text-sm text-zinc-400">Share this invite link:</p>
-                <div className="p-3 bg-[#1e1e2e] rounded-xl text-sm break-all text-emerald-400 border border-emerald-500/20">
-                  {joinLink}
+              <div className="pt-2 border-t border-zinc-800/80 space-y-2">
+                <label className="text-xs text-zinc-400 font-medium">Invite Link</label>
+                <div className="flex items-center gap-2 bg-zinc-900 border border-zinc-800 p-2 rounded-xl">
+                  <input
+                    type="text"
+                    readOnly
+                    value={joinLink}
+                    className="bg-transparent text-xs text-zinc-300 flex-1 outline-none truncate"
+                  />
+                  <button
+                    onClick={copyLink}
+                    className="px-2.5 py-1.5 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-xs font-semibold text-white flex items-center gap-1 transition cursor-pointer"
+                  >
+                    {copied ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
+                    {copied ? "Copied" : "Copy"}
+                  </button>
                 </div>
-                <Button
-                  variant="secondary"
-                  className="w-full rounded-xl bg-[#1e1e2e] hover:bg-zinc-800 border border-zinc-800"
-                  onClick={copyLink}
-                >
-                  📋 Copy Invite Link
-                </Button>
               </div>
             )}
           </div>
@@ -309,36 +315,29 @@ export default function DashboardClient({ user, groups }: DashboardProps) {
 
       {/* JOIN DIALOG */}
       <Dialog open={joinOpen} onOpenChange={setJoinOpen}>
-        <DialogContent className="bg-[#12121a] border-zinc-800/50 rounded-2xl shadow-2xl">
+        <DialogContent className="bg-zinc-950 border-zinc-800 rounded-2xl shadow-2xl max-w-sm sm:max-w-md w-[calc(100vw-2rem)] p-5 sm:p-6 text-white">
           <DialogHeader>
-            <DialogTitle className="text-xl font-bold flex items-center gap-2">
-              <span className="w-8 h-8 rounded-lg gradient-violet flex items-center justify-center text-sm">🔗</span>
-              Join a Group
-            </DialogTitle>
+            <DialogTitle className="text-lg sm:text-xl font-bold text-white">Join a Group</DialogTitle>
           </DialogHeader>
 
-          <div className="space-y-4 mt-2">
-            <Input
-              className="bg-[#1e1e2e] border-zinc-800 rounded-xl h-12 focus:border-violet-500/50 focus:ring-violet-500/20"
-              placeholder="Paste the invite token here"
-              value={token}
-              onChange={(e) => setToken(e.target.value)}
-              onKeyDown={(e) => e.key === "Enter" && joinGroup()}
-            />
-            <Button
-              className="w-full rounded-xl h-12 gradient-violet hover:opacity-90 font-semibold text-white border-0"
+          <div className="space-y-4 pt-3">
+            <div>
+              <label className="text-xs font-medium text-zinc-400 block mb-1.5">Invite Token</label>
+              <Input
+                placeholder="Paste token or link suffix"
+                value={token}
+                onChange={(e) => setToken(e.target.value)}
+                className="bg-zinc-900 border-zinc-800 text-white rounded-xl h-11 text-base placeholder:text-zinc-600 focus:border-zinc-600"
+              />
+            </div>
+
+            <button
               onClick={joinGroup}
               disabled={loading || !token.trim()}
+              className="w-full py-3 rounded-xl bg-white hover:bg-zinc-200 text-zinc-950 font-semibold text-sm transition-all disabled:opacity-50 cursor-pointer shadow-sm active:scale-98"
             >
-              {loading ? (
-                <span className="flex items-center gap-2">
-                  <span className="w-4 h-4 rounded-full border-2 border-white border-t-transparent animate-spin" />
-                  Joining...
-                </span>
-              ) : (
-                "Join Group"
-              )}
-            </Button>
+              {loading ? "Joining..." : "Join Group"}
+            </button>
           </div>
         </DialogContent>
       </Dialog>

@@ -6,6 +6,7 @@ import User from "@/models/User";
 import { connectToDatabase } from "@/lib/db";
 import { auth } from "@/auth";
 import { headers } from "next/headers";
+import { revalidatePath } from "next/cache";
 
 /**
  * POST /api/groups
@@ -64,6 +65,8 @@ export async function POST(request: Request) {
 
     await dbSession.commitTransaction();
     dbSession.endSession();
+
+    revalidatePath("/dashboard");
 
     // [CHANGED] Build the full absolute URL so it works when shared externally
     const headersList = await headers();

@@ -1,6 +1,7 @@
 import "@/models";
 import mongoose, { Types } from "mongoose";
 import { connectToDatabase } from "@/lib/db";
+import { getCached, setCached } from "@/lib/cache";
 
 export type HistorySplit = {
   name: string;
@@ -22,8 +23,15 @@ export type HistoryItem = {
 /**
  * Fetches and merges expense + settlement history for a group,
  * including split breakdown with involved members and amounts, sorted newest-first.
+ * Cached in-memory with automatic invalidation on new expenses/settlements.
  */
-export async function getGroupHistory(groupId: string) {
+export async function getGroupHistory(groupId: string): Promise<HistoryItem[]> {
+  const cacheKey = `group-history-${groupId}`;
+  const cachedData = getCached<HistoryItem[]>(cacheKey);
+  if (cachedData) {
+    return cachedData;
+  }
+
   await connectToDatabase();
 
   const Expense = mongoose.models.Expense;
@@ -86,10 +94,13 @@ export async function getGroupHistory(groupId: string) {
   }));
 
   // 5️⃣ Merge + Sort newest first
-  return [...expenseHistory, ...settlementHistory].sort(
+  const result: HistoryItem[] = [...expenseHistory, ...settlementHistory].sort(
     (a, b) =>
       new Date(b.createdAt).getTime() -
       new Date(a.createdAt).getTime()
   );
+
+  setCached(cacheKey, result, 60); // Cache for 60 seconds
+  return result;
 }
 
