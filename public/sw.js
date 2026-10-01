@@ -48,6 +48,11 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
+  // Only handle GET requests for caching
+  if (request.method !== 'GET') {
+    return;
+  }
+
   // Never cache API routes or NextAuth routes
   if (url.pathname.startsWith('/api/')) {
     return;
