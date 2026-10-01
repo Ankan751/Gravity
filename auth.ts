@@ -14,6 +14,10 @@ if (!googleClientId || !googleClientSecret) {
 }
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
+  session: {
+    strategy: "jwt",
+    maxAge: 30 * 24 * 60 * 60, // 30 days persistent cookie
+  },
   providers: [
     Google({
       clientId: googleClientId,
@@ -22,9 +26,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   ],
   callbacks: {
     /**
-     * [CHANGE] signIn callback — upserts the user into MongoDB on every login.
-     * If the user already exists, we update their name/image only if they changed
-     * on the Google side. This keeps the DB in sync with the OAuth provider.
+     * signIn callback — upserts the user into MongoDB on login.
+     * Sets user.id to the MongoDB _id so it can be saved into the JWT cookie.
      */
     async signIn({ user }) {
       try {
@@ -36,6 +39,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         const existingUser = await User.findOne({ email: user.email });
         const resolvedName = user.name?.trim() || user.email.split("@")[0];
 
+        let dbId: string;
         if (!existingUser) {
           const newUser = new User({
             email: user.email,
@@ -43,7 +47,9 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             image: user.image ?? undefined,
           });
           await newUser.save();
+          dbId = newUser._id.toString();
         } else {
+          dbId = existingUser._id.toString();
           const nextName = user.name?.trim();
           const nextImage = user.image ?? undefined;
 
@@ -57,6 +63,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           }
         }
 
+        // Attach DB ID to user object so jwt callback receives it
+        user.id = dbId;
         return true;
       } catch (error) {
         console.error("Error during sign-in callback:", error);
@@ -65,31 +73,38 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     },
 
     /**
-     * [ADDED] session callback — attaches the MongoDB _id to the session object.
-     * This eliminates the need for User.findOne({ email }) in every API route,
-     * as session.user.id will now contain the MongoDB ObjectId string.
+     * jwt callback — persists the MongoDB user ID directly inside the encrypted JWT cookie.
+     * Only runs once on sign-in or token refresh, avoiding repeated DB lookups.
      */
-    async session({ session }) {
-      if (session?.user?.email) {
-        await connectToDatabase();
-        const dbUser = await User.findOne({ email: session.user.email }).lean() as any;
-        if (dbUser) {
-          session.user.id = dbUser._id.toString();
+    async jwt({ token, user }) {
+      if (user?.id) {
+        token.id = user.id;
+      }
+      return token;
+    },
+
+    /**
+     * session callback — reads the user ID directly from the decrypted JWT cookie.
+     * Zero database calls are made here, maximizing speed on every request.
+     */
+    async session({ session, token }) {
+      if (token) {
+        if (token.id) {
+          session.user.id = token.id as string;
+        } else if (token.sub) {
+          session.user.id = token.sub;
         }
       }
       return session;
     },
 
     /**
-     * [ADDED] redirect callback — after sign-in, always redirect to /dashboard
-     * instead of the default home page.
+     * redirect callback — after sign-in, redirect to /dashboard
      */
     async redirect({ url, baseUrl }) {
-      // If the URL is a relative callback or the signin page, go to dashboard
       if (url === baseUrl || url === `${baseUrl}/` || url.includes("/api/auth")) {
         return `${baseUrl}/dashboard`;
       }
-      // For other URLs (e.g., callbackUrl from a protected page), respect them
       if (url.startsWith(baseUrl)) return url;
       return `${baseUrl}/dashboard`;
     },

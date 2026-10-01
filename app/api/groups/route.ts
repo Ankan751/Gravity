@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose, { Types } from "mongoose";
 import crypto from "crypto";
 import Group from "@/models/Group";
 import GroupMember from "@/models/GroupMember";
@@ -19,7 +19,7 @@ import { headers } from "next/headers";
  */
 export async function POST(request: Request) {
   const session = await auth();
-  if (!session?.user?.email) {
+  if (!session?.user?.id) {
     return new Response("Unauthorized", { status: 401 });
   }
 
@@ -30,10 +30,7 @@ export async function POST(request: Request) {
     return new Response("Group name required", { status: 400 });
   }
 
-  const user = await User.findOne({ email: session.user.email });
-  if (!user) {
-    return new Response("User not found", { status: 404 });
-  }
+  const userId = new Types.ObjectId(session.user.id);
 
   // Use a MongoDB session/transaction to ensure both the group and the
   // admin membership are created atomically — if one fails, both roll back.
@@ -48,7 +45,7 @@ export async function POST(request: Request) {
         {
           name: groupName.trim(),
           token,
-          createdBy: user._id,
+          createdBy: userId,
         },
       ],
       { session: dbSession }
@@ -58,7 +55,7 @@ export async function POST(request: Request) {
       [
         {
           groupId: group._id,
-          userId: user._id,
+          userId: userId,
           role: "admin",
         },
       ],

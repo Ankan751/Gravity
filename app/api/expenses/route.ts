@@ -51,23 +51,20 @@ export async function POST(request: Request) {
 
   await connectToDatabase();
 
-  const user = await User.findOne({ email: session.user.email });
-  if (!user) {
-    return new Response("User not found", { status: 404 });
-  }
-
   const objectGroupId = new Types.ObjectId(groupId);
+  const currentUserId = session.user.id;
+  const userObjectId = new Types.ObjectId(currentUserId);
 
-  // [ADDED] Membership validation — only group members can create expenses
+  // Membership validation — only group members can create expenses
   const membership = await GroupMember.findOne({
     groupId: objectGroupId,
-    userId: user._id,
+    userId: userObjectId,
   });
   if (!membership) {
     return new Response("You are not a member of this group", { status: 403 });
   }
 
-  // [ADDED] Transaction wrapper for atomic writes
+  // Transaction wrapper for atomic writes
   const dbSession = await mongoose.startSession();
   dbSession.startTransaction();
 
@@ -76,7 +73,7 @@ export async function POST(request: Request) {
       [
         {
           groupId: objectGroupId,
-          paidBy: user._id,
+          paidBy: userObjectId,
           amount,
           description: description || "Untitled expense",
           splitType,
@@ -136,7 +133,7 @@ export async function POST(request: Request) {
        *   which is backwards.
        */
       const delta =
-        userId === user._id.toString()
+        userId === currentUserId
           ? amount - splits[userId] // payer: +totalPaid - theirOwnShare = net owed TO them
           : -splits[userId]; // others: they OWE this amount
 

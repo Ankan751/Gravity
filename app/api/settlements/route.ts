@@ -45,21 +45,23 @@ export async function POST(request: Request) {
 
     await connectToDatabase();
     
-    const payer = await User.findOne({ email: session.user.email });
-    if (!payer) {
-        return new Response("User not found", { status: 404 });
+    const currentUserId = session.user.id;
+    if (!currentUserId) {
+        return new Response("Unauthorized", { status: 401 });
     }
 
-    if (payer._id.toString() === toUserId) {
+    if (currentUserId === toUserId) {
         return new Response("Cannot settle with yourself", { status: 400 });
     }
 
     const objectGroupId = new Types.ObjectId(groupId);
+    const payerObjectId = new Types.ObjectId(currentUserId);
+    const receiverObjectId = new Types.ObjectId(toUserId);
 
-    // Verify both users are members of the group
+    // Verify both users are members of the group in parallel
     const [payerMembership, receiverMembership] = await Promise.all([
-        GroupMember.findOne({ groupId: objectGroupId, userId: payer._id }),
-        GroupMember.findOne({ groupId: objectGroupId, userId: new Types.ObjectId(toUserId) }),
+        GroupMember.findOne({ groupId: objectGroupId, userId: payerObjectId }),
+        GroupMember.findOne({ groupId: objectGroupId, userId: receiverObjectId }),
     ]);
 
     if (!payerMembership || !receiverMembership) {
@@ -75,8 +77,8 @@ export async function POST(request: Request) {
             [
                 {
                     groupId: objectGroupId,
-                    from: payer._id,
-                    to: new Types.ObjectId(toUserId),
+                    from: payerObjectId,
+                    to: receiverObjectId,
                     amount: amountInPaise,
                     note: note || undefined,
                     status: "completed",
@@ -85,14 +87,12 @@ export async function POST(request: Request) {
             { session: dbSession }
         );
 
-        // [FIX] Payer's balance INCREASES — they paid cash to reduce their debt.
-        // Example: A owes B ₹500 (A has -500 balance). A pays B ₹500 cash.
-        // A's ledger gets +500 → balance becomes 0. Debt cleared.
+        // Payer's balance INCREASES — they paid cash to reduce their debt.
         await LedgerEntry.create(
             [
                 {
                     groupId: objectGroupId,
-                    userId: payer._id,
+                    userId: payerObjectId,
                     delta: +amountInPaise,
                     sourceType: "settlement",
                     sourceId: settlement._id,

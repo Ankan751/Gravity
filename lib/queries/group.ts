@@ -32,17 +32,25 @@ export async function getGroupHistory(groupId: string) {
 
   const objectId = new Types.ObjectId(groupId);
 
-  // 1️⃣ Fetch expenses
-  const expenses = await Expense.find({ groupId: objectId })
-    .populate("paidBy", "name email")
-    .sort({ createdAt: -1 })
-    .lean();
+  // 1️⃣ Fetch expenses and settlements in parallel
+  const [expenses, settlements] = await Promise.all([
+    Expense.find({ groupId: objectId })
+      .populate("paidBy", "name email")
+      .sort({ createdAt: -1 })
+      .lean(),
+    Settlement.find({ groupId: objectId })
+      .populate("from to", "name email")
+      .sort({ createdAt: -1 })
+      .lean(),
+  ]);
 
-  // 2️⃣ Fetch splits for all fetched expenses
+  // 2️⃣ Fetch splits only if expenses exist
   const expenseIds = expenses.map((e: any) => e._id);
-  const splits = await ExpenseSplit.find({ expenseId: { $in: expenseIds } })
-    .populate("userId", "name email")
-    .lean();
+  const splits = expenseIds.length > 0
+    ? await ExpenseSplit.find({ expenseId: { $in: expenseIds } })
+        .populate("userId", "name email")
+        .lean()
+    : [];
 
   const splitsByExpenseId: Record<string, HistorySplit[]> = {};
   for (const s of splits as any[]) {
@@ -54,12 +62,6 @@ export async function getGroupHistory(groupId: string) {
       amount: s.amount,
     });
   }
-
-  // 3️⃣ Fetch settlements
-  const settlements = await Settlement.find({ groupId: objectId })
-    .populate("from to", "name email")
-    .sort({ createdAt: -1 })
-    .lean();
 
   // 4️⃣ Normalize into common shape
   const expenseHistory = expenses.map((e: any) => ({

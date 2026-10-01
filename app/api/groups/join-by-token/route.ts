@@ -6,7 +6,7 @@ import { auth } from "@/auth";
 
 export async function POST(request: Request) {
   const session = await auth();
-  if (!session?.user?.email) {
+  if (!session?.user?.id) {
     return new Response("Unauthorized", { status: 401 });
   }
 
@@ -17,16 +17,13 @@ export async function POST(request: Request) {
     return new Response("Token required", { status: 400 });
   }
 
-  const user = await User.findOne({ email: session.user.email });
-  if (!user) return new Response("User not found", { status: 404 });
-
   const group = await Group.findOne({ token: token.trim() });
   if (!group) return new Response("Invalid invite link", { status: 404 });
 
   try {
     await GroupMember.create({
       groupId: group._id,
-      userId: user._id,
+      userId: session.user.id,
       role: "member",
     });
   } catch (err: any) {

@@ -23,16 +23,9 @@ export default async function JoinPage(props: {
   const { token } = await props.params;
 
   const session = await auth();
-  if (!session?.user?.email) redirect("/");
+  if (!session?.user?.id) redirect("/");
 
   await connectToDatabase();
-
-  const user = await User.findOne({ email: session.user.email });
-
-  // [ADDED] Null check — user must exist in DB
-  if (!user) {
-    redirect("/");
-  }
 
   const group = await Group.findOne({ token });
 
@@ -55,7 +48,7 @@ export default async function JoinPage(props: {
   try {
     await GroupMember.create({
       groupId: group._id,
-      userId: user._id,
+      userId: session.user.id,
       role: "member",
     });
   } catch (err: any) {
